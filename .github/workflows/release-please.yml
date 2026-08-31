@@ -28,6 +28,29 @@ jobs:
         run: python3 .hermes/skills/story-development/scripts/validate_story.py examples/small-mercy
 
       - name: Create or update release pull request
+        id: release
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+      - name: Validate and merge generated release
+        if: steps.release.outputs.prs_created == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_PR_NUMBER: ${{ fromJSON(steps.release.outputs.pr).number }}
+        run: |
+          test -n "$RELEASE_PR_NUMBER"
+          gh pr checkout "$RELEASE_PR_NUMBER"
+          python3 -m unittest discover -s tests -v
+          python3 .hermes/skills/story-development/scripts/validate_story.py examples/small-mercy
+          gh pr merge "$RELEASE_PR_NUMBER" --squash --delete-branch
+          git fetch origin main
+          git checkout -B main origin/main
+
+      - name: Publish merged release
+        if: steps.release.outputs.prs_created == 'true'
         uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}

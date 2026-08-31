@@ -21,6 +21,7 @@ class ReleaseConfigurationTests(unittest.TestCase):
         package = config["packages"]["."]
         self.assertEqual(package["release-type"], "simple")
         self.assertTrue(package["include-v-in-tag"])
+        self.assertFalse(package["include-component-in-tag"])
         self.assertEqual(package["package-name"], "fiction-workshop")
         self.assertEqual(
             package["extra-files"],
@@ -65,9 +66,19 @@ class ReleaseConfigurationTests(unittest.TestCase):
             "45996ed1f6d02564a971a2fa1b5860e934307cf7"
         )
         checkout_action = "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
-        self.assertIn(release_action, workflow)
+        self.assertEqual(workflow.count(release_action), 2)
         self.assertIn(checkout_action, workflow)
         self.assertLess(workflow.index("python3 -m unittest"), workflow.index(release_action))
+        first_release = workflow.index(release_action)
+        merge = workflow.index("gh pr merge")
+        second_release = workflow.rindex(release_action)
+        self.assertLess(first_release, merge)
+        self.assertLess(merge, second_release)
+        self.assertIn("gh pr checkout", workflow)
+        self.assertIn("fromJSON(steps.release.outputs.pr).number", workflow)
+        self.assertNotIn("gh pr list", workflow)
+        self.assertIn("git checkout -B main origin/main", workflow)
+        self.assertGreaterEqual(workflow.count("python3 -m unittest"), 2)
         self.assertIn("contents: write", workflow)
         self.assertIn("pull-requests: write", workflow)
 

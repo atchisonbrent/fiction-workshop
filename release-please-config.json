@@ -5,6 +5,7 @@
       "release-type": "simple",
       "package-name": "fiction-workshop",
       "include-v-in-tag": true,
+      "include-component-in-tag": false,
       "extra-files": [
         {
           "type": "generic",

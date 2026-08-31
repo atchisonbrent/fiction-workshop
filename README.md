@@ -111,16 +111,15 @@ copyrighted by their author. See `LICENSES.md` and `examples/LICENSE.md`.
 ## Releases
 
 This repository uses [Release Please](https://github.com/googleapis/release-please)
-to turn Conventional Commits on `main` into reviewable release pull requests.
-Merging a release PR updates `CHANGELOG.md`, `version.txt`, and the skill version,
-then creates the matching `vX.Y.Z` tag and GitHub Release. No package registry is
-involved.
+to release eagerly from Conventional Commits on `main`. For every release-worthy
+push, the workflow tests `main`, generates a release PR, checks out and tests that
+generated version change, auto-merges it, then creates the matching `vX.Y.Z` tag
+and GitHub Release in the same run. No package registry is involved.
 
-To abort a proposed release, close its PR and delete the `release-please--*`
-branch so automation does not reopen it. To roll back a published release, delete
-the GitHub Release and tag, then restore the manifest, version files, and changelog
-to one consistent prior version before pushing again. Do not hand-edit a Release
-Please PR; fix the source commit on `main` and let automation regenerate it.
+To roll back a published release, delete the GitHub Release and tag, then restore
+the manifest, version files, and changelog to one consistent prior version before
+pushing again. Do not hand-edit the transient Release Please PR; fix the source
+commit on `main` and let automation regenerate it.
 
 ## Current boundary
 
