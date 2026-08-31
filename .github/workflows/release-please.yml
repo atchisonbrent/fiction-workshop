@@ -39,13 +39,15 @@ jobs:
         if: steps.release.outputs.prs_created == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_PR_NUMBER: ${{ fromJSON(steps.release.outputs.pr).number }}
+          RELEASE_PR_JSON: ${{ steps.release.outputs.pr }}
         run: |
-          test -n "$RELEASE_PR_NUMBER"
-          gh pr checkout "$RELEASE_PR_NUMBER"
+          pr_number="$(jq -r '.number' <<<"$RELEASE_PR_JSON")"
+          test "$pr_number" != "null"
+          test -n "$pr_number"
+          gh pr checkout "$pr_number"
           python3 -m unittest discover -s tests -v
           python3 .hermes/skills/story-development/scripts/validate_story.py examples/small-mercy
-          gh pr merge "$RELEASE_PR_NUMBER" --squash --delete-branch
+          gh pr merge "$pr_number" --squash --delete-branch
           git fetch origin main
           git checkout -B main origin/main
 
