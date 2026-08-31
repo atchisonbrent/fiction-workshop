@@ -24,9 +24,16 @@ and tests require no third-party Python packages.
 
 ## Install
 
-From the project where you want the skill available:
+Choose the installation scope first.
+
+### Install for one writing workspace
+
+A project-local install is relative to the shell's **current directory**. Run the
+command from the root of the repository or folder where you will develop stories.
+For an existing project:
 
 ```text
+cd /path/to/my-writing-project
 npx skills add atchisonbrent/fiction-workshop \
   --skill story-development \
   --agent codex \
@@ -35,18 +42,58 @@ npx skills add atchisonbrent/fiction-workshop \
   --agent hermes-agent
 ```
 
-Add `--global` to install it for the current user instead of one project. Update
-an installed copy with:
+If you are starting from nothing, create the workspace first:
 
 ```text
-npx skills update story-development
+mkdir my-writing-project
+cd my-writing-project
+git init
+npx skills add atchisonbrent/fiction-workshop \
+  --skill story-development \
+  --agent codex \
+  --agent claude-code \
+  --agent opencode \
+  --agent hermes-agent
 ```
 
-The installer places or links the complete skill—including references, templates,
-and validator—into each selected agent's supported skill directory. Start a new
-agent session after installation. Invoke it explicitly as `$story-development`
-in Codex, `/story-development` in Claude Code, or ask any supported agent
-naturally to develop a story.
+Without `--global`, the installer creates or links skill directories beneath that
+current workspace—for example `.agents/skills/story-development`, with
+agent-specific links or copies such as `.claude/skills/story-development` and
+`.hermes/skills/story-development`. This keeps the skill scoped to agents started
+for that workspace.
+
+### Install for your user account
+
+Use a global install when you want the skill available across projects. In that
+case, the current directory does not determine the installation location:
+
+```text
+npx skills add atchisonbrent/fiction-workshop \
+  --skill story-development \
+  --agent codex \
+  --agent claude-code \
+  --agent opencode \
+  --agent hermes-agent \
+  --global
+```
+
+The installer then uses each agent's user-level skill directory. Update a
+project-local installation from that project's root with:
+
+```text
+npx skills update --project story-development
+```
+
+Update a global installation from anywhere with:
+
+```text
+npx skills update --global story-development
+```
+
+The installer includes the complete skill—references, templates, and validator.
+Start a new agent session after installation. Invoke it explicitly as
+`$story-development` in Codex, `/story-development` in Claude Code, or ask any
+supported agent naturally to develop a story.
 
 ## Clone and develop
 
