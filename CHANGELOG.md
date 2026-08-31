@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/atchisonbrent/fiction-workshop/compare/v0.1.0...v0.1.1) (2026-08-31)
+
+
+### Bug Fixes
+
+* **release:** enable eager semantic releases ([99ea7d7](https://github.com/atchisonbrent/fiction-workshop/commit/99ea7d74fba474b5d92ed2938ab1485e5f01ecbb))
+
 ## 0.1.0 (2026-08-31)
 
 
