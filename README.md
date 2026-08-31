@@ -26,7 +26,7 @@ The validator and tests do not require third-party Python packages.
 git clone https://github.com/atchisonbrent/fiction-workshop.git
 cd fiction-workshop
 python3 -m unittest discover -s tests -v
-python3 .hermes/skills/story-development/scripts/validate_story.py stories/small-mercy
+python3 .hermes/skills/story-development/scripts/validate_story.py examples/small-mercy
 ```
 
 To use the project-local skill, trust this checkout once:
@@ -56,12 +56,13 @@ migrate to a second schema.
 ## Repository layout
 
 - `.hermes/skills/story-development/` — procedure, references, templates, and validator.
-- `stories/<slug>/working/` — mutable contract, canon, chapters, and aggregate manuscript for the active version.
-- `stories/<slug>/release-contracts/<id>/` — immutable contract, kernel, approved draft, canon, and hash manifest.
-- `stories/<slug>/outline/` — beats for short work; movements and ledgers for longer work.
-- `stories/<slug>/decisions/` — expansion audits, retcons, and consequential design choices.
-- `stories/<slug>/style/` — voice profile, scoped influence cards, and novelty ledger.
+- `examples/small-mercy/` — one complete original project used as a public validator and workflow fixture.
 - `tests/` — deterministic validator tests.
+
+Personal story projects live in a separate content repository or directory and
+use the same internal `working/`, `release-contracts/`, `outline/`, `decisions/`,
+and `style/` layout. Cloning this tooling repository does not download Brent's
+private works.
 
 When a story uses chapter files, `working/manuscript.md` is the aggregate sharing
 copy assembled in chapter order. A released `approved-draft.md` is the immutable
@@ -69,12 +70,13 @@ sharing copy for that release.
 
 ## Create a story
 
-1. Copy the JSON templates from `.hermes/skills/story-development/templates/`.
-2. Create `stories/<slug>/LICENSE.md` using the ownership notice described in
-   `stories/LICENSE.md`.
-3. Add `kernel.md`, `project.json`, working contract/canon, and only the planning
+1. Create a story directory in your own content repository or workspace.
+2. Copy the JSON templates from `.hermes/skills/story-development/templates/`.
+3. Add a per-story `LICENSE.md` naming the copyright owner and terms; adapt the
+   notice pattern described in `examples/LICENSE.md`.
+4. Add `kernel.md`, `project.json`, working contract/canon, and only the planning
    artifacts required by the chosen resolution.
-4. Validate the story before committing it.
+5. Validate the story before committing it.
 
 See `.hermes/skills/story-development/references/story-model.md` and
 `docs/architecture.md` for the complete model.
@@ -83,7 +85,7 @@ See `.hermes/skills/story-development/references/story-model.md` and
 
 ```text
 python3 -m unittest discover -s tests -v
-python3 .hermes/skills/story-development/scripts/validate_story.py stories/small-mercy
+python3 .hermes/skills/story-development/scripts/validate_story.py examples/small-mercy
 ```
 
 The validator checks structural fields and types, required planning artifacts,
@@ -94,15 +96,17 @@ continuity claim.
 
 ## Publication boundary
 
-This repository accepts **original fiction only**. Do not commit derivative fan
-works, copied source text, confidential drafts, credentials, or private model and
-review-session logs. See `CONTRIBUTING.md`.
+This repository ships **tooling plus one curated original example**. Personal
+story projects—including original works—belong in a separate content repository
+so consumers do not download them with the tool. Never commit derivative fan
+works, copied source text, confidential drafts, credentials, or private model
+and review-session logs here. See `CONTRIBUTING.md`.
 
 ## Licensing
 
 Code, templates, and eligible workshop documentation are MIT licensed. Original
 story prose and story-specific creative assets are not covered by MIT and remain
-copyrighted by their author. See `LICENSES.md` and `stories/LICENSE.md`.
+copyrighted by their author. See `LICENSES.md` and `examples/LICENSE.md`.
 
 ## Current boundary
 

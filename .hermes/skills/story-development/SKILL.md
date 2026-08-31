@@ -26,16 +26,18 @@ Use when the user wants to:
 - preserve continuity, character integrity, chronology, or world rules;
 - explore structurally different story possibilities;
 - use artistic influences without copying or close imitation;
-- resume a story already stored under `stories/`.
+- resume a story already stored in the active content workspace.
 
 Do not use for ordinary nonfiction or for line-editing text unrelated to a story
 project. Do not assume a brief should become a novel.
 
 ## Prerequisites
 
-- Work from this repository so project-local context and files are available.
+- Work from this repository so the project-local skill is available. A story may
+  live in a separate content workspace; pass its path to the validator and load
+  its files explicitly.
 - Before relying on an existing story, validate it through `terminal`:
-  `python3 .hermes/skills/story-development/scripts/validate_story.py stories/<slug>`.
+  `python3 .hermes/skills/story-development/scripts/validate_story.py <path-to-story>`.
 - Treat released trees under `release-contracts/<id>/` as immutable.
 
 ## Procedure
@@ -161,7 +163,7 @@ Run:
 
 ```text
 terminal(command="python3 -m unittest discover -s tests -v", workdir="<repo>")
-terminal(command="python3 .hermes/skills/story-development/scripts/validate_story.py stories/<slug>", workdir="<repo>")
+terminal(command="python3 .hermes/skills/story-development/scripts/validate_story.py <path-to-story>", workdir="<repo>")
 ```
 
 Before claiming completion, verify:

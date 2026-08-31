@@ -544,7 +544,7 @@ class ValidateStoryTests(unittest.TestCase):
             self.assertIn("retcon supersedes no ancestor fact: missing-parent-fact", result.stderr)
 
     def test_shipped_short_to_novella_fixture_validates(self) -> None:
-        story = REPO_ROOT / "stories" / "small-mercy"
+        story = REPO_ROOT / "examples" / "small-mercy"
         released = story / "release-contracts" / "short-v1"
         manifest = json.loads((released / "manifest.json").read_text(encoding="utf-8"))
         before = {name: sha256(released / name) for name in manifest["files"]}

@@ -60,11 +60,12 @@ signature imitation, or a permanent global writer persona.
 
 ## Publication boundary
 
-The repository contains reusable tooling and original fiction only. Code and
-procedural material use the root MIT license; story prose has explicit per-story
-copyright terms. The validator requires every story directory to carry its own
-`LICENSE.md`, making the licensing boundary part of structural validation rather
-than a README promise.
+The repository contains reusable tooling and one curated original example only.
+Personal fiction lives in a separate content repository. Code and procedural
+material use the root MIT license; example prose has explicit per-example
+copyright terms. The validator requires every validated story directory to carry
+its own `LICENSE.md`, making the licensing boundary part of structural validation
+rather than a README promise.
 
 ## Deliberate omissions
 

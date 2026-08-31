@@ -15,10 +15,10 @@ The root `LICENSE` applies to:
 
 ## Original creative works
 
-Files under `stories/` are **not** licensed under MIT unless a file explicitly
-says otherwise. Story prose, kernels, character material, outlines, canon,
+Files under `examples/` are **not** licensed under MIT unless a file explicitly
+says otherwise. Example story prose, kernels, character material, outlines, canon,
 worldbuilding, and story-specific editorial artifacts remain under the copyright
-notice in that story's `LICENSE.md`.
+notice in that example's `LICENSE.md`.
 
 Repository visibility, cloning, or forking does not grant permission to publish,
 sell, sublicense, adapt, or redistribute those creative works beyond what

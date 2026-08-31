@@ -17,9 +17,10 @@ Do not commit:
 - credentials, secret-bearing URLs, personal data, or local machine paths;
 - model-provider plumbing, private review-session identifiers, or raw agent logs.
 
-Original fiction belongs under `stories/<slug>/` and must include a per-story
-`LICENSE.md` identifying its copyright owner and terms. The root MIT license does
-not automatically apply to story content.
+Personal fiction belongs in a separate content repository, not this tooling
+repository. `examples/` contains only maintainer-curated original fixtures, each
+with a `LICENSE.md` identifying its copyright owner and terms. The root MIT
+license does not automatically apply to example story content.
 
 ## Development checks
 
@@ -27,7 +28,7 @@ Before submitting a change:
 
 ```text
 python3 -m unittest discover -s tests -v
-python3 .hermes/skills/story-development/scripts/validate_story.py stories/<slug>
+python3 .hermes/skills/story-development/scripts/validate_story.py <path-to-story>
 ```
 
 Run the validator for every story you changed. Do not edit an existing released
