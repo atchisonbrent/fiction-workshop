@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/atchisonbrent/fiction-workshop/compare/v0.1.2...v0.2.0) (2026-08-31)
+
+
+### Features
+
+* make story skill portable across agents ([c5f76ee](https://github.com/atchisonbrent/fiction-workshop/commit/c5f76ee8c1f10834782d1f0a2f5964948010aded))
+
 ## [0.1.2](https://github.com/atchisonbrent/fiction-workshop/compare/v0.1.1...v0.1.2) (2026-08-31)
 
 
