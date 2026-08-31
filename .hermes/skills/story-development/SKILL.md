@@ -1,7 +1,7 @@
 ---
 name: story-development
 description: Create and grow continuity-safe fiction across lengths.
-version: 0.1.0
+version: 0.0.0 # x-release-please-version
 author: Brent Atchison (atchisonbrent), Helion
 license: MIT
 platforms: [linux, macos, windows]
