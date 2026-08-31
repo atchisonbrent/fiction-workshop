@@ -43,7 +43,7 @@ For an existing project:
 
 ```text
 cd /path/to/my-writing-project
-SKILL_VERSION=v0.2.0 # x-release-please-version
+SKILL_VERSION=v0.2.1 # x-release-please-version
 npx skills add "https://github.com/atchisonbrent/fiction-workshop/tree/${SKILL_VERSION}/.agents/skills/story-development" \
   --skill story-development \
   --agent codex \
@@ -58,7 +58,7 @@ If you are starting from nothing, create the workspace first:
 mkdir my-writing-project
 cd my-writing-project
 git init
-SKILL_VERSION=v0.2.0 # x-release-please-version
+SKILL_VERSION=v0.2.1 # x-release-please-version
 npx skills add "https://github.com/atchisonbrent/fiction-workshop/tree/${SKILL_VERSION}/.agents/skills/story-development" \
   --skill story-development \
   --agent codex \
@@ -79,7 +79,7 @@ Use a global install when you want the skill available across projects. In that
 case, the current directory does not determine the installation location:
 
 ```text
-SKILL_VERSION=v0.2.0 # x-release-please-version
+SKILL_VERSION=v0.2.1 # x-release-please-version
 npx skills add "https://github.com/atchisonbrent/fiction-workshop/tree/${SKILL_VERSION}/.agents/skills/story-development" \
   --skill story-development \
   --agent codex \

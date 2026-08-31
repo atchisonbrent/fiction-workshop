@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/atchisonbrent/fiction-workshop/compare/v0.2.0...v0.2.1) (2026-08-31)
+
+
+### Bug Fixes
+
+* **release:** keep install docs version synchronized ([63094dd](https://github.com/atchisonbrent/fiction-workshop/commit/63094dd038e0a5529aa8dca76782ffc5a1b48939))
+
 ## [0.2.0](https://github.com/atchisonbrent/fiction-workshop/compare/v0.1.2...v0.2.0) (2026-08-31)
 
 
