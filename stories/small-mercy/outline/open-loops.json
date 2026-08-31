@@ -1,0 +1,22 @@
+{
+  "open_loops": [
+    {
+      "id": "heat-ledger-investigation",
+      "status": "open",
+      "origin": "movement-1",
+      "promise": "Identify how the discrepancy is discovered and who controls its interpretation."
+    },
+    {
+      "id": "selen-choice",
+      "status": "open",
+      "origin": "movement-1",
+      "promise": "Force Selen to choose between institutional legitimacy and sacrificing Nera."
+    },
+    {
+      "id": "mercy-protocol-outcome",
+      "status": "open",
+      "origin": "movement-2",
+      "promise": "Show whether mercy can become accountable process without becoming automatic permission."
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "release_id": "short-v1",
+  "status": "released",
+  "parent_release_id": null,
+  "expansion_modes": [],
+  "reader_promise": "One customs officer makes a complete, costly choice between lawful scarcity and immediate mercy.",
+  "opening_contract": "A failing station treats warmth as customs cargo while a refugee ship requests an impossible exception.",
+  "closing_contract": "The strangers escape because Nera knowingly breaks the rule; she remains to bear discovery, and no later rescue is promised.",
+  "required_payoffs": [
+    "purpose-of-heat-request",
+    "nera-choice",
+    "ship-departure"
+  ],
+  "out_of_scope": [
+    "Public trial",
+    "Institutional reform",
+    "The refugees' later fate"
+  ],
+  "accepted_ambiguities": [
+    "Nera's eventual punishment"
+  ],
+  "standalone_reader_reset": [],
+  "frozen_scope_budget": {
+    "planning_resolution": "short",
+    "publication_shape": "standalone",
+    "target_mode": "bounded",
+    "target_words": {
+      "min": 800,
+      "preferred": 1200,
+      "max": 1800
+    },
+    "reader_promise": "One customs officer makes a complete, costly choice between lawful scarcity and immediate mercy.",
+    "closure_posture": "closed",
+    "revisit_policy": "expandable"
+  }
+}

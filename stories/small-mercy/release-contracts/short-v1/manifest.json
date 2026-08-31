@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "release_id": "short-v1",
+  "files": {
+    "approved-draft.md": "3fd733e4d9ba2816880137c88d0b58b82e4f5405222841c7cb26c71d79836e08",
+    "canon.json": "c080087ff9b87e1964a33c059a6511fcbd69ed04137304356fc8f896295a983c",
+    "contract.json": "26976463b2f57528285ff60a3bb61b10b42a531b401ff79f9358664b1db223f4",
+    "kernel.md": "f2138243cbb7d74e1d12d74c9f336af972c28ac8ed3ffce5a0423ef9019e85ad"
+  }
+}

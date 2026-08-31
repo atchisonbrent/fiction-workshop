@@ -1,0 +1,15 @@
+{
+  "release_id": "short-v1",
+  "status": "working",
+  "parent_release_id": null,
+  "expansion_modes": [],
+  "reader_promise": "State what this version owes its reader.",
+  "opening_contract": "State the initial dramatic and tonal contract.",
+  "closing_contract": "State what the ending establishes without dictating prose.",
+  "required_payoffs": [
+    "payoff-id"
+  ],
+  "out_of_scope": [],
+  "accepted_ambiguities": [],
+  "standalone_reader_reset": []
+}

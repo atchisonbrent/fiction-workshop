@@ -1,0 +1,52 @@
+{
+  "id": "selen-marr",
+  "name": "Selen Marr",
+  "public_goal": "Complete the heat-ledger audit without giving the Directorate grounds to revoke local authority.",
+  "private_goal": "Prove that accountable institutions can make humane decisions without depending on secret heroes.",
+  "values": [
+    "Equal process",
+    "Local self-government",
+    "Evidence before loyalty"
+  ],
+  "contradictions": [
+    "Protecting local autonomy may require offering Nera as an exemplary offender"
+  ],
+  "behavioral_patterns": [
+    "Asks narrow questions until another person's story contradicts itself",
+    "Delays moral language until facts are stable"
+  ],
+  "fracture_conditions": [
+    "May conceal evidence for one audit cycle if disclosure would immediately destroy local authority"
+  ],
+  "knowledge": {
+    "knows": [
+      "Directorate audit procedure",
+      "Station allocation accounting"
+    ],
+    "suspects": [],
+    "falsely_believes": [
+      "A sufficiently precise process can eliminate tragic discretion"
+    ]
+  },
+  "capabilities": [
+    "Forensic accounting",
+    "Institutional negotiation"
+  ],
+  "limitations": [
+    "Cannot erase a Directorate-signed ledger event",
+    "Has never worked the customs desk during a live emergency"
+  ],
+  "relationships": {
+    "nera-vale": "Auditor and suspected offender at novella opening"
+  },
+  "voice": {
+    "rhythm": "Measured, layered questions",
+    "diction": "Precise without Nera's customs shorthand",
+    "humor_mechanism": "Rare literalism",
+    "avoids": [
+      "Sarcasm under pressure",
+      "Claims of certainty before documentation"
+    ]
+  },
+  "arc_pressure": "Procedural legitimacy versus the need for human discretion"
+}

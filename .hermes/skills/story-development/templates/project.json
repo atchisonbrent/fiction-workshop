@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "story_id": "story-slug",
+  "title": "Working Title",
+  "active_release_id": "short-v1",
+  "current_scope_budget": {
+    "planning_resolution": "short",
+    "publication_shape": "standalone",
+    "target_mode": "bounded",
+    "target_words": {
+      "min": 2000,
+      "preferred": 5000,
+      "max": 8000
+    },
+    "reader_promise": "State the complete experience promised by this version.",
+    "closure_posture": "closed",
+    "revisit_policy": "expandable"
+  },
+  "complexity": {
+    "pov_count": 1,
+    "subplot_count": 0,
+    "timeline_nonlinear": false,
+    "world_rule_density": "low"
+  },
+  "divergence_axes": [
+    "conflict_source",
+    "emotional_movement",
+    "consequence"
+  ]
+}

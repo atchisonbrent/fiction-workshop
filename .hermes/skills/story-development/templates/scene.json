@@ -1,0 +1,19 @@
+{
+  "id": "scene-or-beat-id",
+  "kind": "scene",
+  "pov": "character-id",
+  "time": "",
+  "location": "",
+  "goal": "",
+  "opposition": "",
+  "turn": "",
+  "outcome": "",
+  "cost": "",
+  "obligations": {
+    "opened": [],
+    "advanced": [],
+    "resolved": [],
+    "deferred": []
+  },
+  "accepted_state_deltas": []
+}

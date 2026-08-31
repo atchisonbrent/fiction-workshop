@@ -1,0 +1,12 @@
+{
+  "lineage": "main",
+  "facts": [
+    {
+      "id": "example-fact",
+      "status": "established",
+      "statement": "Write one precise fact.",
+      "provenance": "beat-or-scene-id",
+      "viewpoint_limit": null
+    }
+  ]
+}

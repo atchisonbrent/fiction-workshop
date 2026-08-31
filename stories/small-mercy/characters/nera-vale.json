@@ -1,0 +1,53 @@
+{
+  "id": "nera-vale",
+  "name": "Nera Vale",
+  "public_goal": "Keep Lacuna Station's customs desk lawful and operational.",
+  "private_goal": "Remain someone who can recognize when procedure has become an alibi.",
+  "values": [
+    "Immediate preventable death outweighs institutional cleanliness",
+    "A choice creates an obligation to bear its cost"
+  ],
+  "contradictions": [
+    "Relies on procedure yet distrusts moral decisions hidden inside it"
+  ],
+  "behavioral_patterns": [
+    "Uses dry understatement when frightened",
+    "Acts only after making the cost concrete"
+  ],
+  "fracture_conditions": [
+    "Will falsify a record to prevent immediate deaths when no timely appeal exists"
+  ],
+  "knowledge": {
+    "knows": [
+      "How station heat allocation and customs quarantine interact"
+    ],
+    "suspects": [
+      "The Directorate's rules conceal unofficial exceptions"
+    ],
+    "falsely_believes": [
+      "Her punishment can remain a simple personal matter"
+    ]
+  },
+  "capabilities": [
+    "Customs procedure",
+    "Quarantine routing",
+    "Reading institutional incentives"
+  ],
+  "limitations": [
+    "No authority over station heat",
+    "No political constituency"
+  ],
+  "relationships": {
+    "selen-marr": "Unknown at novella opening"
+  },
+  "voice": {
+    "rhythm": "Concise with exact concrete observations",
+    "diction": "Procedural language used dryly rather than reverently",
+    "humor_mechanism": "Understatement and administrative mismatch",
+    "avoids": [
+      "Heroic declarations",
+      "Abstract claims about goodness"
+    ]
+  },
+  "arc_pressure": "Private moral agency versus public accountability"
+}

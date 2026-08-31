@@ -1,0 +1,30 @@
+{
+  "release_id": "novella-v1",
+  "status": "working",
+  "parent_release_id": "short-v1",
+  "expansion_modes": [
+    "deepen",
+    "widen"
+  ],
+  "reader_promise": "The consequences of Nera's completed choice become a conflict over whether mercy can survive institutionalization.",
+  "opening_contract": "Begin after the refugee ship has escaped, with the station forced to account for twelve missing minutes of heat.",
+  "closing_contract": "Resolve who has authority to make exceptions and show an irreversible cost; do not reverse the short story's rescue.",
+  "required_payoffs": [
+    "heat-ledger-investigation",
+    "selen-choice",
+    "mercy-protocol-outcome"
+  ],
+  "out_of_scope": [
+    "A galaxy-wide revolution",
+    "The refugees returning as rescuers",
+    "Proof that every merciful exception is correct"
+  ],
+  "accepted_ambiguities": [
+    "Whether the Directorate can tolerate the new protocol long-term"
+  ],
+  "standalone_reader_reset": [
+    "Why station heat is rationed",
+    "What Nera did during the missing twelve minutes",
+    "Why the refugee ship cannot simply return"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "story_id": "small-mercy",
+  "title": "Small Mercy",
+  "active_release_id": "novella-v1",
+  "current_scope_budget": {
+    "planning_resolution": "novella",
+    "publication_shape": "standalone",
+    "target_mode": "exploratory",
+    "target_words": {
+      "min": 18000,
+      "preferred": 28000,
+      "max": 40000
+    },
+    "reader_promise": "A customs officer's private mercy becomes a public institutional crisis without undoing the choice that completed the short story.",
+    "closure_posture": "closed",
+    "revisit_policy": "expandable"
+  },
+  "complexity": {
+    "pov_count": 2,
+    "subplot_count": 1,
+    "timeline_nonlinear": false,
+    "world_rule_density": "medium"
+  },
+  "divergence_axes": [
+    "institutional_response",
+    "second_pov_power_center",
+    "cost_of_mercy",
+    "ending_shape"
+  ]
+}

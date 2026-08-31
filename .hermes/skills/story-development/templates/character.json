@@ -1,0 +1,25 @@
+{
+  "id": "character-id",
+  "name": "Name",
+  "public_goal": "",
+  "private_goal": "",
+  "values": [],
+  "contradictions": [],
+  "behavioral_patterns": [],
+  "fracture_conditions": [],
+  "knowledge": {
+    "knows": [],
+    "suspects": [],
+    "falsely_believes": []
+  },
+  "capabilities": [],
+  "limitations": [],
+  "relationships": {},
+  "voice": {
+    "rhythm": "",
+    "diction": "",
+    "humor_mechanism": "",
+    "avoids": []
+  },
+  "arc_pressure": ""
+}

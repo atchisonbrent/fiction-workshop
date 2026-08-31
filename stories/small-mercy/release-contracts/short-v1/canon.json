@@ -1,0 +1,35 @@
+{
+  "lineage": "main",
+  "facts": [
+    {
+      "id": "station-heat-rationed",
+      "status": "established",
+      "statement": "Lacuna Station rations heat because its damaged reactor cannot safely support every compartment at once.",
+      "provenance": "short-v1:opening"
+    },
+    {
+      "id": "refugee-ship-has-eighty-three",
+      "status": "established",
+      "statement": "The refugee ship carries eighty-three people, including thirty-one children; four passengers are in medical cold-sleep and the youngest is two.",
+      "provenance": "short-v1:request"
+    },
+    {
+      "id": "nera-granted-twelve-minutes",
+      "status": "established",
+      "statement": "Nera diverted twelve minutes of station heat to thaw the refugee ship's catalyst valves and falsified the automatic refusal.",
+      "provenance": "short-v1:decision"
+    },
+    {
+      "id": "old-ring-delayed",
+      "status": "established",
+      "statement": "The diversion delayed heat for the old habitation ring and its 806 residents by twelve minutes.",
+      "provenance": "short-v1:decision"
+    },
+    {
+      "id": "refugee-ship-departed",
+      "status": "established",
+      "statement": "The refugee ship restarted its drive and departed before the patrol arrived.",
+      "provenance": "short-v1:ending"
+    }
+  ]
+}
