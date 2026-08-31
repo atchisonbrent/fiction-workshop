@@ -11,6 +11,7 @@ VERSION = REPO_ROOT / "version.txt"
 CHANGELOG = REPO_ROOT / "CHANGELOG.md"
 WORKFLOW = REPO_ROOT / ".github" / "workflows" / "release-please.yml"
 SKILL = REPO_ROOT / ".agents" / "skills" / "story-development" / "SKILL.md"
+README = REPO_ROOT / "README.md"
 
 
 class ReleaseConfigurationTests(unittest.TestCase):
@@ -29,7 +30,11 @@ class ReleaseConfigurationTests(unittest.TestCase):
                 {
                     "type": "generic",
                     "path": ".agents/skills/story-development/SKILL.md",
-                }
+                },
+                {
+                    "type": "generic",
+                    "path": "README.md",
+                },
             ],
         )
         self.assertEqual(set(manifest), {"."})
@@ -48,6 +53,14 @@ class ReleaseConfigurationTests(unittest.TestCase):
         self.assertIsNotNone(match)
         assert match is not None
         self.assertEqual(match.group(1), current_version)
+        readme = README.read_text(encoding="utf-8")
+        pinned_versions = re.findall(
+            r"SKILL_VERSION=v(\d+\.\d+\.\d+)\s+#\s*x-release-please-version",
+            readme,
+        )
+        self.assertEqual(len(pinned_versions), 3)
+        self.assertEqual(set(pinned_versions), {current_version})
+        self.assertNotRegex(readme, r"tree/v\d+\.\d+\.\d+/")
         changelog = CHANGELOG.read_text(encoding="utf-8")
         if current_version == "0.0.0":
             self.assertEqual(changelog, "")

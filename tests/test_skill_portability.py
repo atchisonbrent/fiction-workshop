@@ -99,7 +99,11 @@ class SkillPortabilityTests(unittest.TestCase):
                 {
                     "type": "generic",
                     "path": ".agents/skills/story-development/SKILL.md",
-                }
+                },
+                {
+                    "type": "generic",
+                    "path": "README.md",
+                },
             ],
         )
 
