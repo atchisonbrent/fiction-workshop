@@ -196,5 +196,7 @@ commit on `main` and let automation regenerate it.
 ## Current boundary
 
 This version deliberately has no database, vector retrieval, daemon, UI,
-publishing pipeline, shared universe across story slugs, or autonomous
-multi-agent runtime. Add those only after real stories demonstrate the need.
+story-publication pipeline, shared universe across story slugs, or autonomous
+multi-agent runtime. Repository version tags and GitHub Releases are handled by
+the software release workflow above. Add omitted story-system machinery only
+after real stories demonstrate the need.

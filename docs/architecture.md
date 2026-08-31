@@ -70,6 +70,7 @@ rather than a README promise.
 ## Deliberate omissions
 
 The initial architecture has no database, embeddings, service process, custom
-interface, publishing automation, or autonomous agent runtime. Git, Markdown,
-JSON, and deterministic validation are enough until demonstrated scale requires
-more machinery.
+interface, story-publication automation, or autonomous agent runtime. Git,
+Markdown, JSON, and deterministic validation are enough until demonstrated scale
+requires more machinery. Repository version tags and GitHub Releases are handled
+separately by the software release workflow documented in `README.md`.
