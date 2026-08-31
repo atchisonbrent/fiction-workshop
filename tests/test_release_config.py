@@ -65,7 +65,7 @@ class ReleaseConfigurationTests(unittest.TestCase):
             "googleapis/release-please-action@"
             "45996ed1f6d02564a971a2fa1b5860e934307cf7"
         )
-        checkout_action = "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+        checkout_action = "actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09"
         self.assertEqual(workflow.count(release_action), 2)
         self.assertIn(checkout_action, workflow)
         self.assertLess(workflow.index("python3 -m unittest"), workflow.index(release_action))
