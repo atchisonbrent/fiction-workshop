@@ -48,7 +48,10 @@ class ReleaseConfigurationTests(unittest.TestCase):
         assert match is not None
         self.assertEqual(match.group(1), current_version)
         changelog = CHANGELOG.read_text(encoding="utf-8")
-        self.assertEqual(changelog.count("# Changelog"), 1)
+        if current_version == "0.0.0":
+            self.assertEqual(changelog, "")
+        else:
+            self.assertEqual(changelog.count("# Changelog"), 1)
 
     def test_workflow_tests_before_pinned_release_action(self) -> None:
         workflow = WORKFLOW.read_text(encoding="utf-8")
