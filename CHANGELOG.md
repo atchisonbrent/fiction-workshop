@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/atchisonbrent/fiction-workshop/compare/v0.1.1...v0.1.2) (2026-08-31)
+
+
+### Bug Fixes
+
+* **release:** guard empty pull request output ([dc69d42](https://github.com/atchisonbrent/fiction-workshop/commit/dc69d42c0affd24a5369244cae2b2d98498ac32f))
+
 ## [0.1.1](https://github.com/atchisonbrent/fiction-workshop/compare/v0.1.0...v0.1.1) (2026-08-31)
 
 
