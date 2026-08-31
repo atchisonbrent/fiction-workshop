@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-VALIDATOR = REPO_ROOT / ".hermes" / "skills" / "story-development" / "scripts" / "validate_story.py"
+VALIDATOR = REPO_ROOT / ".agents" / "skills" / "story-development" / "scripts" / "validate_story.py"
 
 
 def write_json(path: Path, value: object) -> None:

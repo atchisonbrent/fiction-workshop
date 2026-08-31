@@ -25,7 +25,7 @@ jobs:
         run: python3 -m unittest discover -s tests -v
 
       - name: Validate public example
-        run: python3 .hermes/skills/story-development/scripts/validate_story.py examples/small-mercy
+        run: python3 .agents/skills/story-development/scripts/validate_story.py examples/small-mercy
 
       - name: Create or update release pull request
         id: release
@@ -46,7 +46,7 @@ jobs:
           test -n "$pr_number"
           gh pr checkout "$pr_number"
           python3 -m unittest discover -s tests -v
-          python3 .hermes/skills/story-development/scripts/validate_story.py examples/small-mercy
+          python3 .agents/skills/story-development/scripts/validate_story.py examples/small-mercy
           gh pr merge "$pr_number" --squash --delete-branch
           git fetch origin main
           git checkout -B main origin/main

@@ -9,7 +9,7 @@
       "extra-files": [
         {
           "type": "generic",
-          "path": ".hermes/skills/story-development/SKILL.md"
+          "path": ".agents/skills/story-development/SKILL.md"
         }
       ]
     }

@@ -10,7 +10,7 @@ MANIFEST = REPO_ROOT / ".release-please-manifest.json"
 VERSION = REPO_ROOT / "version.txt"
 CHANGELOG = REPO_ROOT / "CHANGELOG.md"
 WORKFLOW = REPO_ROOT / ".github" / "workflows" / "release-please.yml"
-SKILL = REPO_ROOT / ".hermes" / "skills" / "story-development" / "SKILL.md"
+SKILL = REPO_ROOT / ".agents" / "skills" / "story-development" / "SKILL.md"
 
 
 class ReleaseConfigurationTests(unittest.TestCase):
@@ -28,7 +28,7 @@ class ReleaseConfigurationTests(unittest.TestCase):
             [
                 {
                     "type": "generic",
-                    "path": ".hermes/skills/story-development/SKILL.md",
+                    "path": ".agents/skills/story-development/SKILL.md",
                 }
             ],
         )
@@ -58,7 +58,7 @@ class ReleaseConfigurationTests(unittest.TestCase):
         workflow = WORKFLOW.read_text(encoding="utf-8")
         self.assertIn("python3 -m unittest discover -s tests -v", workflow)
         self.assertIn(
-            "python3 .hermes/skills/story-development/scripts/validate_story.py examples/small-mercy",
+            "python3 .agents/skills/story-development/scripts/validate_story.py examples/small-mercy",
             workflow,
         )
         release_action = (

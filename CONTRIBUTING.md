@@ -28,7 +28,7 @@ Before submitting a change:
 
 ```text
 python3 -m unittest discover -s tests -v
-python3 .hermes/skills/story-development/scripts/validate_story.py <path-to-story>
+python3 .agents/skills/story-development/scripts/validate_story.py <path-to-story>
 ```
 
 Run the validator for every story you changed. Do not edit an existing released
@@ -49,6 +49,6 @@ custom commit-message prefix.
 
 ## Scope
 
-Keep reusable procedure in the project-local skill and story facts in the story
+Keep reusable procedure in the portable skill and story facts in the story
 directory. Re-gate before adding a database, retrieval service, publishing
 pipeline, custom UI, unattended publication, or shared canon across story slugs.

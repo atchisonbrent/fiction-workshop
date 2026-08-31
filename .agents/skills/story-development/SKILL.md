@@ -33,11 +33,17 @@ project. Do not assume a brief should become a novel.
 
 ## Prerequisites
 
-- Work from this repository so the project-local skill is available. A story may
-  live in a separate content workspace; pass its path to the validator and load
-  its files explicitly.
-- Before relying on an existing story, validate it through `terminal`:
-  `python3 .hermes/skills/story-development/scripts/validate_story.py <path-to-story>`.
+- Define `SKILL_DIR` as notation for the absolute directory containing this
+  `SKILL.md`; it is not assumed to be a pre-existing environment variable.
+  Resolve every `references/`, `templates/`, and `scripts/` path from
+  `SKILL_DIR`; never assume the skill is installed under a particular agent's
+  configuration directory or inside the story repository.
+- A story may live in any content workspace. Pass its path to the validator and
+  load its files explicitly.
+- Before relying on an existing story, run the following after replacing
+  `<SKILL_DIR>` with the absolute directory containing this `SKILL.md`:
+  `python3 <SKILL_DIR>/scripts/validate_story.py <path-to-story>`. On Windows,
+  use `python` when that is the Python 3.10+ launcher.
 - Treat released trees under `release-contracts/<id>/` as immutable.
 
 ## Procedure
@@ -52,7 +58,7 @@ For a new story, establish:
 - a working release contract and canon;
 - only the planning artifacts required by the current resolution.
 
-Load `references/story-model.md` for field semantics and minimum artifacts.
+Load `<SKILL_DIR>/references/story-model.md` for field semantics and minimum artifacts.
 Completion: the story has one active working release and validates structurally.
 
 ### 2. Choose scope without forcing length
@@ -61,7 +67,7 @@ Infer a low-risk scope budget when the request makes it obvious. Ask one tight
 question when flash, short, episodic, or long form would materially change the
 reading experience. Word targets are budgets, not quotas.
 
-Load `references/scope-and-expansion.md` when choosing length or growing prior
+Load `<SKILL_DIR>/references/scope-and-expansion.md` when choosing length or growing prior
 material. Completion: the current budget states a reader promise and still
 allows “keep it short” as a valid outcome.
 
@@ -110,7 +116,7 @@ provenance.
 
 ### 7. Review in separate passes
 
-Load `references/editorial-rubrics.md`. Run only the lenses activated by scope
+Load `<SKILL_DIR>/references/editorial-rubrics.md`. Run only the lenses activated by scope
 and complexity: causality/time, character, world/facts, obligation/payoff, POV
 and tone, pacing/necessity, prose, and freshness/imitation risk. Findings cite
 both conflicting passages or the exact obligation they concern.
@@ -131,7 +137,7 @@ and the audit identifies the new dramatic question that earns the added length.
 
 ### 9. Apply voice and influence deliberately
 
-Load `references/influence-and-voice.md`. Use craft dimensions and transformed
+Load `<SKILL_DIR>/references/influence-and-voice.md`. Use craft dimensions and transformed
 influence cards, never copied passages, signature-phrase mimicry, or “write
 exactly like” instructions. Keep narrator, POV, character, and source-universe
 voices separate.
@@ -141,7 +147,7 @@ being impersonated.
 
 ## Genre adapters
 
-Load `references/genre-adapters.md` only when a genre creates special state or
+Load `<SKILL_DIR>/references/genre-adapters.md` only when a genre creates special state or
 fairness obligations, such as clues in mystery, consent and relationship turns
 in romance, threat rules in horror, or technology costs in science fiction.
 Adapters add checks; they do not impose one universal plot structure.
@@ -162,8 +168,7 @@ Adapters add checks; they do not impose one universal plot structure.
 Run:
 
 ```text
-terminal(command="python3 -m unittest discover -s tests -v", workdir="<repo>")
-terminal(command="python3 .hermes/skills/story-development/scripts/validate_story.py <path-to-story>", workdir="<repo>")
+python3 <SKILL_DIR>/scripts/validate_story.py <path-to-story>
 ```
 
 Before claiming completion, verify:

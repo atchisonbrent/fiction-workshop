@@ -7,7 +7,7 @@ repository.
 
 The root `LICENSE` applies to:
 
-- `.hermes/skills/story-development/`;
+- `.agents/skills/story-development/`;
 - `tests/`;
 - reusable JSON templates;
 - `README.md`, `CONTRIBUTING.md`, `.hermes.md`, and procedural documents under

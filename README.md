@@ -6,37 +6,62 @@ changing systems halfway through.
 
 The repository contains:
 
-- a project-local Hermes skill for story development;
+- a portable Agent Skill for story development;
 - deterministic JSON templates and a standard-library Python validator;
-- tests for release integrity, lineage, canon, and scope constraints;
+- tests for release integrity, lineage, canon, portability, and scope constraints;
 - `small-mercy`, an original short-to-long workflow fixture.
 
 ## Requirements
 
 - Python 3.10 or newer
 - Git
-- [Hermes Agent](https://hermes-agent.nousresearch.com/docs) when using the
-  project-local writing skill
+- Node.js only when using the optional universal `npx skills` installer
 
-The validator and tests do not require third-party Python packages.
+The skill follows the open Agent Skills format used by Codex, Claude Code,
+OpenCode, and Hermes Agent. The validator commands use `python3`; on Windows,
+use `python` when that is the Python 3.10+ launcher on your system. The validator
+and tests require no third-party Python packages.
 
-## Quick start
+## Install
+
+From the project where you want the skill available:
+
+```text
+npx skills add atchisonbrent/fiction-workshop \
+  --skill story-development \
+  --agent codex \
+  --agent claude-code \
+  --agent opencode \
+  --agent hermes-agent
+```
+
+Add `--global` to install it for the current user instead of one project. Update
+an installed copy with:
+
+```text
+npx skills update story-development
+```
+
+The installer places or links the complete skill—including references, templates,
+and validator—into each selected agent's supported skill directory. Start a new
+agent session after installation. Invoke it explicitly as `$story-development`
+in Codex, `/story-development` in Claude Code, or ask any supported agent
+naturally to develop a story.
+
+## Clone and develop
 
 ```text
 git clone https://github.com/atchisonbrent/fiction-workshop.git
 cd fiction-workshop
 python3 -m unittest discover -s tests -v
-python3 .hermes/skills/story-development/scripts/validate_story.py examples/small-mercy
+python3 .agents/skills/story-development/scripts/validate_story.py examples/small-mercy
 ```
 
-To use the project-local skill, trust this checkout once:
-
-```text
-hermes skills trust
-```
-
-Then start a Hermes session from the repository and invoke
-`/story-development`, or ask naturally to develop an original story.
+Codex, OpenCode, and a trusted Hermes checkout discover the checked-in
+`.agents/skills/story-development` directly. For Hermes, trust the checkout once
+with `hermes skills trust`; Claude Code and any agent version that does not scan
+`.agents/skills` directly should use the installer above so it receives the skill
+in its own supported directory.
 
 ## Story model
 
@@ -55,7 +80,7 @@ migrate to a second schema.
 
 ## Repository layout
 
-- `.hermes/skills/story-development/` — procedure, references, templates, and validator.
+- `.agents/skills/story-development/` — procedure, references, templates, and validator.
 - `examples/small-mercy/` — one complete original project used as a public validator and workflow fixture.
 - `tests/` — deterministic validator tests.
 
@@ -71,21 +96,21 @@ sharing copy for that release.
 ## Create a story
 
 1. Create a story directory in your own content repository or workspace.
-2. Copy the JSON templates from `.hermes/skills/story-development/templates/`.
+2. Copy the JSON templates from `.agents/skills/story-development/templates/`.
 3. Add a per-story `LICENSE.md` naming the copyright owner and terms; adapt the
    notice pattern described in `examples/LICENSE.md`.
 4. Add `kernel.md`, `project.json`, working contract/canon, and only the planning
    artifacts required by the chosen resolution.
 5. Validate the story before committing it.
 
-See `.hermes/skills/story-development/references/story-model.md` and
+See `.agents/skills/story-development/references/story-model.md` and
 `docs/architecture.md` for the complete model.
 
 ## Validation
 
 ```text
 python3 -m unittest discover -s tests -v
-python3 .hermes/skills/story-development/scripts/validate_story.py examples/small-mercy
+python3 .agents/skills/story-development/scripts/validate_story.py examples/small-mercy
 ```
 
 The validator checks structural fields and types, required planning artifacts,
