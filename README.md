@@ -24,7 +24,15 @@ and tests require no third-party Python packages.
 
 ## Install
 
-Choose the installation scope first.
+Choose the installation scope and release channel first.
+
+- **Stable/pinned:** install from a release tag such as `v0.2.0`. Updates stay
+  on that tag until you explicitly install a newer tag.
+- **Latest:** install from `atchisonbrent/fiction-workshop`. Updates follow the
+  current default branch, which may contain changes newer than the latest tag.
+
+The examples below use the stable `v0.2.0` release. To follow latest instead,
+replace the tagged URL with `atchisonbrent/fiction-workshop`.
 
 ### Install for one writing workspace
 
@@ -34,7 +42,7 @@ For an existing project:
 
 ```text
 cd /path/to/my-writing-project
-npx skills add atchisonbrent/fiction-workshop \
+npx skills add https://github.com/atchisonbrent/fiction-workshop/tree/v0.2.0/.agents/skills/story-development \
   --skill story-development \
   --agent codex \
   --agent claude-code \
@@ -48,7 +56,7 @@ If you are starting from nothing, create the workspace first:
 mkdir my-writing-project
 cd my-writing-project
 git init
-npx skills add atchisonbrent/fiction-workshop \
+npx skills add https://github.com/atchisonbrent/fiction-workshop/tree/v0.2.0/.agents/skills/story-development \
   --skill story-development \
   --agent codex \
   --agent claude-code \
@@ -68,7 +76,7 @@ Use a global install when you want the skill available across projects. In that
 case, the current directory does not determine the installation location:
 
 ```text
-npx skills add atchisonbrent/fiction-workshop \
+npx skills add https://github.com/atchisonbrent/fiction-workshop/tree/v0.2.0/.agents/skills/story-development \
   --skill story-development \
   --agent codex \
   --agent claude-code \
@@ -89,6 +97,13 @@ Update a global installation from anywhere with:
 ```text
 npx skills update --global story-development
 ```
+
+For a latest-channel installation, those commands fetch current default-branch
+content. For a pinned installation, they refresh the same recorded tag. To move
+from `v0.2.0` to a later release, rerun the matching `skills add` command with the
+new tag in the URL—for example, change `v0.2.0` to `v0.3.0`. The project's
+`skills-lock.json` records the selected tag and content hash; commit that lock
+file when the writing workspace is shared so collaborators use the same source.
 
 The installer includes the complete skill—references, templates, and validator.
 Start a new agent session after installation. Invoke it explicitly as
