@@ -34,6 +34,19 @@ python3 .hermes/skills/story-development/scripts/validate_story.py <path-to-stor
 Run the validator for every story you changed. Do not edit an existing released
 tree under `release-contracts/<id>/`; create a child release instead.
 
+## Commit messages
+
+Use [Conventional Commits](https://www.conventionalcommits.org/) for every commit:
+
+```text
+<type>[optional scope]: <imperative summary>
+```
+
+Common types here are `feat`, `fix`, `docs`, `test`, `refactor`, `chore`, and
+`ci`. Use `!` or a `BREAKING CHANGE:` footer when a change breaks a documented
+interface. Keep verification status in review evidence or CI output—not in a
+custom commit-message prefix.
+
 ## Scope
 
 Keep reusable procedure in the project-local skill and story facts in the story
