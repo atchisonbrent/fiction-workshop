@@ -111,8 +111,14 @@ open obligations, and ancestor closing contracts. Draft prose first; commit
 canon and state deltas only after the passage is accepted. Discarded generations
 never become facts.
 
+When prose is split into `working/chapters/*.md`, every established fact's
+`provenance` must name a chapter file stem (`03-six-red-marks`), a heading slug
+inside one (`chapter-three-six-red-marks`), a scene ID, or `kernel`. Regenerate
+`working/manuscript.md` from the chapters (sorted, joined by a `---` rule) so the
+aggregate never lags the parts; the validator rejects a stale aggregate.
+
 Completion: accepted prose and state agree, and every new established fact has
-provenance.
+provenance that resolves to real text.
 
 ### 7. Review in separate passes
 
@@ -124,7 +130,23 @@ both conflicting passages or the exact obligation they concern.
 Completion: blockers are repaired or explicitly accepted; editorial opinion is
 not misreported as deterministic validation.
 
-### 8. Expand by copy-on-write
+### 8. Release, then expand by copy-on-write
+
+Release with the tool, never by hand:
+
+```text
+python3 <SKILL_DIR>/scripts/release_story.py <path-to-story> [--dry-run]
+```
+
+It requires a valid story whose working contract declares
+`manuscript_status: complete`, freezes the kernel, canon, prose (assembled from
+chapters when present), and contract with the current scope budget, writes the
+manifest, and re-validates. It refuses to touch an existing release tree.
+
+While the working set still points at a released ID, it must stay byte-identical
+to that release; the validator treats any drift as editing a released story. To
+keep writing, open a child: new `release_id`, `parent_release_id` naming the
+release, `active_release_id` updated to match.
 
 Never edit a released parent to make a child fit. Save an expansion audit under
 `decisions/`, choose one or more modes (deepen, widen, extend, reframe, adapt),
@@ -176,6 +198,7 @@ Before claiming completion, verify:
 - the active working set has a nonempty, non-symlinked `LICENSE.md` and satisfies
   its own scope and complexity requirements;
 - every released tree matches its manifest and frozen budget;
+- a working set that reuses a released ID is byte-identical to that release;
 - a child’s parent exists and remains unchanged;
 - canon fact IDs are unique within each canon view; inherited facts may retain
   their IDs across parent and child views, and required statuses carry provenance;

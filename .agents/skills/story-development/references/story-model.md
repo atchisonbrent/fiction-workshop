@@ -52,6 +52,12 @@ inside one canon file/view. A child view normally retains inherited parent IDs s
 provenance and retcons remain traceable across releases. Parent snapshots never
 change.
 
+Provenance is free-form while the whole text fits one reading. Once prose lives in
+`working/chapters/*.md`, provenance must resolve: a chapter file stem, a heading
+slug within a chapter (lowercase, punctuation stripped, spaces to hyphens), a
+scene ID from `outline/scenes/`, or `kernel`. This is what makes "load only the
+relevant prose" possible at novella scale without a database.
+
 ## Character evidence
 
 Track detail only when it can constrain or enrich future writing:

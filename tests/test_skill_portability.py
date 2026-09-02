@@ -16,6 +16,7 @@ EXPECTED_SUPPORT_FILES = {
     "references/influence-and-voice.md",
     "references/scope-and-expansion.md",
     "references/story-model.md",
+    "scripts/release_story.py",
     "scripts/validate_story.py",
     "templates/canon.json",
     "templates/character.json",

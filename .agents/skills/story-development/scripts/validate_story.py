@@ -40,6 +40,61 @@ CANON_STATUSES = {
     "retconned",
     "rejected_branch",
 }
+PROVENANCE_REQUIRED_STATUSES = {
+    "established",
+    "character_belief",
+    "rumor_or_claim",
+    "retconned",
+}
+CHAPTER_JOINER = "\n\n---\n\n"
+
+
+def chapter_files(story: Path) -> list[Path]:
+    """Return working chapter files in assembly order, or [] when none exist."""
+    chapters = story / "working" / "chapters"
+    if not chapters.is_dir() or chapters.is_symlink():
+        return []
+    return sorted(
+        path for path in chapters.glob("*.md") if path.is_file() and not path.is_symlink()
+    )
+
+
+def assemble_manuscript(chapters: list[Path]) -> str:
+    """Deterministically assemble chapter files into one manuscript text."""
+    return CHAPTER_JOINER.join(
+        path.read_text(encoding="utf-8").rstrip("\n") for path in chapters
+    ) + "\n"
+
+
+def heading_anchor(heading: str) -> str:
+    """Derive a stable slug from a Markdown heading line (without the leading #s)."""
+    text = re.sub(r"[^\w\s-]", "", heading.strip().lower())
+    return re.sub(r"[\s_]+", "-", text).strip("-")
+
+
+def provenance_targets(story: Path, chapters: list[Path]) -> set[str]:
+    """Collect every identifier a canon provenance may resolve to.
+
+    Chapter file stems, chapter headings (as slugs), and every scene/beat ID in
+    ``outline/scenes/*.json`` count. The special value ``kernel`` always resolves.
+    """
+    targets: set[str] = {"kernel"}
+    for chapter in chapters:
+        targets.add(chapter.stem)
+        for line in chapter.read_text(encoding="utf-8").splitlines():
+            if line.startswith("#"):
+                slug = heading_anchor(line.lstrip("#"))
+                if slug:
+                    targets.add(slug)
+    scenes = story / "outline" / "scenes"
+    if scenes.is_dir() and not scenes.is_symlink():
+        for scene_file in sorted(scenes.glob("*.json")):
+            if not scene_file.is_file() or scene_file.is_symlink():
+                continue
+            scene = load_json(scene_file)
+            if isinstance(scene, dict) and isinstance(scene.get("id"), str):
+                targets.add(scene["id"])
+    return targets
 
 
 def load_json(path: Path) -> Any:
@@ -138,7 +193,7 @@ def validate_canon(canon: dict[str, Any], label: str) -> None:
             raise ValueError(f"{label} fact {fact_id} has invalid status")
         if not isinstance(fact["statement"], str) or not fact["statement"].strip():
             raise ValueError(f"{label} fact {fact_id} has invalid statement")
-        if status in {"established", "character_belief", "rumor_or_claim", "retconned"}:
+        if status in PROVENANCE_REQUIRED_STATUSES:
             require_fields(fact, {"provenance"}, f"{label} fact {fact_id}")
             if not isinstance(fact["provenance"], str) or not fact["provenance"].strip():
                 raise ValueError(f"{label} fact {fact_id} has invalid provenance")
@@ -331,6 +386,74 @@ def validate_text_word_budget(text: str, raw_target: Any, label: str) -> None:
         raise ValueError(f"{label} word count {word_count} exceeds maximum {maximum}")
 
 
+def validate_working_provenance(story: Path, canon: dict[str, Any]) -> None:
+    """When chapters exist, working provenance must resolve to real prose or scenes.
+
+    Short-form stories with no chapter files keep free-form provenance: the whole
+    text fits one reading and unresolved labels cost nothing. Once prose is split
+    into chapters, a provenance that names nothing defeats targeted retrieval.
+
+    Only an actively drafted working set is checked. A working set at rest on a
+    released ID is governed by ``validate_working_matches_release`` instead; its
+    frozen provenance is history, and a child release is where it gets repaired.
+    """
+    chapters = chapter_files(story)
+    if not chapters:
+        return
+    targets = provenance_targets(story, chapters)
+    for fact in canon["facts"]:
+        if fact["status"] not in PROVENANCE_REQUIRED_STATUSES:
+            continue
+        provenance = fact["provenance"].strip()
+        if provenance not in targets:
+            raise ValueError(
+                f"working/canon.json fact {fact['id']} provenance does not resolve to a "
+                f"chapter file, chapter heading, scene ID, or 'kernel': {provenance}"
+            )
+
+
+def working_is_at_rest(story: Path, contract: dict[str, Any]) -> bool:
+    """True when the working release ID already has a released snapshot."""
+    released = story / "release-contracts" / contract["release_id"]
+    return released.is_dir() and not released.is_symlink()
+
+
+def validate_working_matches_release(story: Path, contract: dict[str, Any]) -> None:
+    """A working set that reuses a released ID must still equal that release.
+
+    Between releasing and opening a child, the working tree legitimately points at
+    the released ID. Editing it in that state silently mutates what the release
+    claims to have frozen, so require byte equality until a new working release
+    ID (normally a child naming this one as parent) is created.
+    """
+    release_id = contract["release_id"]
+    released = story / "release-contracts" / release_id
+    pairs = [
+        (story / "kernel.md", released / "kernel.md", "kernel.md"),
+        (story / "working" / "canon.json", released / "canon.json", "working/canon.json"),
+    ]
+    for working_path, released_path, label in pairs:
+        if working_path.read_bytes() != released_path.read_bytes():
+            raise ValueError(
+                f"{label} differs from released {release_id}; create a child working "
+                "release instead of editing a released story"
+            )
+    chapters = chapter_files(story)
+    manuscript = story / "working" / "manuscript.md"
+    if chapters:
+        working_text = assemble_manuscript(chapters)
+    elif manuscript.is_file() and not manuscript.is_symlink():
+        working_text = manuscript.read_text(encoding="utf-8")
+    else:
+        return
+    approved = (released / "approved-draft.md").read_text(encoding="utf-8")
+    if working_text != approved:
+        raise ValueError(
+            f"working prose differs from released {release_id}/approved-draft.md; "
+            "create a child working release instead of editing a released story"
+        )
+
+
 def validate_manuscript(
     story: Path,
     budget: dict[str, Any],
@@ -339,10 +462,17 @@ def validate_manuscript(
     status = contract.get("manuscript_status", "draft")
     if status not in {"planned", "draft", "complete"}:
         raise ValueError(f"invalid manuscript_status: {status}")
+    chapters = chapter_files(story)
+    manuscript = story / "working" / "manuscript.md"
+    if chapters and manuscript.is_file() and not manuscript.is_symlink():
+        if manuscript.read_text(encoding="utf-8") != assemble_manuscript(chapters):
+            raise ValueError(
+                "working/manuscript.md is stale: it does not equal the chapter files "
+                "joined in sorted order with '\\n\\n---\\n\\n'"
+            )
     if status != "complete":
         return
 
-    manuscript = story / "working" / "manuscript.md"
     if not manuscript.is_file() or manuscript.is_symlink():
         raise ValueError("complete manuscript requires working/manuscript.md")
     try:
@@ -487,6 +617,10 @@ def validate_story(story: Path) -> str:
             raise ValueError(f"parent release does not exist: {parent_release_id}")
     validate_working_retcons(story, canon, parent_release_id)
     validate_manuscript(story, budget, contract)
+    if working_is_at_rest(story, contract):
+        validate_working_matches_release(story, contract)
+    else:
+        validate_working_provenance(story, canon)
     return str(project["story_id"])
 
 

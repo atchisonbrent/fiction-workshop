@@ -1,5 +1,6 @@
 import json
 import hashlib
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -662,6 +663,112 @@ class ValidateStoryTests(unittest.TestCase):
 
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("unsafe parent_release_id: ../foreign", result.stderr)
+
+    def test_working_set_at_rest_on_released_id_must_match_the_release(self) -> None:
+        """Editing kernel/canon/prose while still pointed at a released ID is drift."""
+        budget = {
+            "planning_resolution": "flash",
+            "publication_shape": "standalone",
+            "target_mode": "bounded",
+            "reader_promise": "A complete turn.",
+            "closure_posture": "closed",
+            "revisit_policy": "expandable",
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            story = Path(tmp) / "at-rest"
+            make_valid_flash(story, "flash-v1")
+            released = make_released_snapshot(story, "flash-v1", budget)
+            # Bring the working set to rest: identical kernel, canon, and prose.
+            (story / "kernel.md").write_bytes((released / "kernel.md").read_bytes())
+            (story / "working" / "canon.json").write_bytes((released / "canon.json").read_bytes())
+            (story / "working" / "manuscript.md").write_bytes(
+                (released / "approved-draft.md").read_bytes()
+            )
+            result = self.run_validator(story)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+            (story / "working" / "manuscript.md").write_text("Edited after release.\n", encoding="utf-8")
+            result = self.run_validator(story)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("working prose differs from released flash-v1", result.stderr)
+
+            (story / "working" / "manuscript.md").write_bytes(
+                (released / "approved-draft.md").read_bytes()
+            )
+            (story / "kernel.md").write_text("# Kernel\n\nQuietly changed.\n", encoding="utf-8")
+            result = self.run_validator(story)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("kernel.md differs from released flash-v1", result.stderr)
+
+            # Opening a child working release lifts the at-rest constraint.
+            contract = json.loads(
+                (story / "working" / "release-contract.json").read_text(encoding="utf-8")
+            )
+            contract["release_id"] = "flash-v2"
+            contract["parent_release_id"] = "flash-v1"
+            write_json(story / "working" / "release-contract.json", contract)
+            project = json.loads((story / "project.json").read_text(encoding="utf-8"))
+            project["active_release_id"] = "flash-v2"
+            write_json(story / "project.json", project)
+            result = self.run_validator(story)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_stale_manuscript_aggregate_fails_when_chapters_exist(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            story = Path(tmp) / "chapters"
+            make_valid_flash(story, "flash-v1")
+            chapters = story / "working" / "chapters"
+            chapters.mkdir(parents=True)
+            (chapters / "01-one.md").write_text("# One\n\nFirst.\n", encoding="utf-8")
+            (chapters / "02-two.md").write_text("# Two\n\nSecond.\n", encoding="utf-8")
+            (story / "working" / "manuscript.md").write_text(
+                "# One\n\nFirst.\n\n---\n\n# Two\n\nSecond.\n", encoding="utf-8"
+            )
+            result = self.run_validator(story)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+            (chapters / "02-two.md").write_text("# Two\n\nSecond, revised.\n", encoding="utf-8")
+            result = self.run_validator(story)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("working/manuscript.md is stale", result.stderr)
+
+    def test_chaptered_working_provenance_must_resolve(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            story = Path(tmp) / "provenance"
+            make_valid_flash(story, "flash-v1")
+            chapters = story / "working" / "chapters"
+            chapters.mkdir(parents=True)
+            (chapters / "01-arrival.md").write_text(
+                "# Story\n\n## Chapter One: The Cold Desk\n\nProse.\n", encoding="utf-8"
+            )
+            canon = {
+                "lineage": "main",
+                "facts": [
+                    {"id": "a", "status": "established", "statement": "A.", "provenance": "kernel"},
+                    {"id": "b", "status": "established", "statement": "B.", "provenance": "01-arrival"},
+                    {
+                        "id": "c",
+                        "status": "character_belief",
+                        "statement": "C.",
+                        "provenance": "chapter-one-the-cold-desk",
+                    },
+                    {"id": "d", "status": "proposed", "statement": "D."},
+                ],
+            }
+            write_json(story / "working" / "canon.json", canon)
+            result = self.run_validator(story)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+            canon["facts"][1]["provenance"] = "first-contact"
+            write_json(story / "working" / "canon.json", canon)
+            result = self.run_validator(story)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("fact b provenance does not resolve", result.stderr)
+
+            # Unchaptered short work keeps free-form provenance.
+            shutil.rmtree(chapters)
+            result = self.run_validator(story)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
 
 if __name__ == "__main__":

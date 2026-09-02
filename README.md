@@ -181,9 +181,24 @@ python3 .agents/skills/story-development/scripts/validate_story.py examples/smal
 
 The validator checks structural fields and types, required planning artifacts,
 payoff ledgers, canon provenance, release lineage, safe paths, immutable
-manifests, story ownership markers, and configured manuscript word budgets.
+manifests, story ownership markers, configured manuscript word budgets, chapter
+aggregate freshness, resolvable provenance in chaptered work, and byte identity
+between a working set and the release it still points at.
 It does **not** prove literary quality, emotional truth, or every semantic
 continuity claim.
+
+## Release a story version
+
+```text
+python3 .agents/skills/story-development/scripts/release_story.py <path-to-story> --dry-run
+python3 .agents/skills/story-development/scripts/release_story.py <path-to-story>
+```
+
+The release tool freezes the working kernel, canon, prose, and contract (with the
+current scope budget embedded) under `release-contracts/<release_id>/`, writes the
+SHA-256 manifest, and revalidates. It refuses when the story is invalid, the
+working contract is not `manuscript_status: complete`, or the release already
+exists. Continue writing by opening a child release ID that names the parent.
 
 ## Publication boundary
 

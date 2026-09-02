@@ -46,7 +46,9 @@ a sequel/prequel, adapt, or abandon.
 
 ## Copy-on-write process
 
-1. Validate the parent release and record its manifest state.
+1. Release the parent with `scripts/release_story.py`; it validates first, freezes
+   the working set, writes the manifest, and revalidates. Never assemble a
+   release tree by hand.
 2. Create a child working contract naming the parent and expansion modes.
 3. Copy relevant canon into the child working view without editing the parent;
    preserve inherited IDs and statements unless an explicit child retcon supersedes them.
