@@ -1,3 +1,4 @@
+import importlib.util
 import json
 import shutil
 import subprocess
@@ -5,6 +6,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -12,6 +14,11 @@ SCRIPTS = REPO_ROOT / ".agents" / "skills" / "story-development" / "scripts"
 RELEASER = SCRIPTS / "release_story.py"
 VALIDATOR = SCRIPTS / "validate_story.py"
 EXAMPLE = REPO_ROOT / "examples" / "small-mercy"
+sys.path.insert(0, str(SCRIPTS))
+RELEASE_SPEC = importlib.util.spec_from_file_location("release_story", RELEASER)
+assert RELEASE_SPEC is not None and RELEASE_SPEC.loader is not None
+release_story = importlib.util.module_from_spec(RELEASE_SPEC)
+RELEASE_SPEC.loader.exec_module(release_story)
 
 
 def run(script: Path, *args: str) -> subprocess.CompletedProcess[str]:
@@ -185,6 +192,72 @@ class ReleaseStoryTests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("stale", result.stderr)
             self.assertFalse(released.exists())
+
+    def test_write_failure_leaves_no_release_or_staging_tree(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            story = Path(tmp) / "small-mercy"
+            released = self.rewind_example_to_short_working_set(story)
+            with mock.patch.object(
+                release_story,
+                "write_release_tree",
+                side_effect=OSError("simulated disk full"),
+            ):
+                with self.assertRaisesRegex(OSError, "simulated disk full"):
+                    release_story.build_release(story, dry_run=False)
+            self.assertFalse(released.exists())
+            self.assertEqual([], list((story / "release-contracts").glob(".*.staging-*")))
+
+    def test_dangling_symlink_release_is_refused_cleanly(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            story = Path(tmp) / "small-mercy"
+            released = self.rewind_example_to_short_working_set(story)
+            released.symlink_to(story / "missing-target", target_is_directory=True)
+            result = run(RELEASER, str(story))
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("release directory cannot be a symlink: short-v1", result.stderr)
+            self.assertNotIn("Traceback", result.stderr)
+            self.assertTrue(released.is_symlink())
+
+    def test_child_release_preserves_parent_and_uses_lexicographic_chapter_order(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            story = Path(tmp) / "small-mercy"
+            parent = self.rewind_example_to_short_working_set(story)
+            shutil.copytree(EXAMPLE / "release-contracts" / "short-v1", parent)
+            contract = read_json(story / "working" / "release-contract.json")
+            contract["release_id"] = "novella-v1"
+            contract["parent_release_id"] = "short-v1"
+            write_json(story / "working" / "release-contract.json", contract)
+            project = read_json(story / "project.json")
+            project["active_release_id"] = "novella-v1"
+            project["current_scope_budget"]["target_words"] = {
+                "min": 1,
+                "preferred": 2,
+                "max": 10,
+            }
+            write_json(story / "project.json", project)
+            chapters = story / "working" / "chapters"
+            chapters.mkdir()
+            (chapters / "10-ten.md").write_text("Ten.\n")
+            (chapters / "02-two.md").write_text("Two.\n")
+            expected = "Two.\n\n---\n\nTen.\n"
+            (story / "working" / "manuscript.md").write_text(expected)
+
+            result = run(RELEASER, str(story))
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            child = story / "release-contracts" / "novella-v1"
+            self.assertEqual(expected, (child / "approved-draft.md").read_text())
+            self.assertTrue(parent.is_dir())
+
+    def test_targetless_complete_story_can_be_released(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            story = Path(tmp) / "small-mercy"
+            released = self.rewind_example_to_short_working_set(story)
+            project = read_json(story / "project.json")
+            project["current_scope_budget"].pop("target_words", None)
+            write_json(story / "project.json", project)
+            result = run(RELEASER, str(story))
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertTrue(released.is_dir())
 
 
 if __name__ == "__main__":

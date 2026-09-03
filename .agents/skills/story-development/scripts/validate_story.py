@@ -52,8 +52,12 @@ CHAPTER_JOINER = "\n\n---\n\n"
 def chapter_files(story: Path) -> list[Path]:
     """Return working chapter files in assembly order, or [] when none exist."""
     chapters = story / "working" / "chapters"
-    if not chapters.is_dir() or chapters.is_symlink():
+    if chapters.is_symlink():
+        raise ValueError("working/chapters must be a real directory, not a symlink")
+    if not chapters.exists():
         return []
+    if not chapters.is_dir():
+        raise ValueError("working/chapters must be a directory")
     return sorted(
         path for path in chapters.glob("*.md") if path.is_file() and not path.is_symlink()
     )
@@ -66,26 +70,16 @@ def assemble_manuscript(chapters: list[Path]) -> str:
     ) + "\n"
 
 
-def heading_anchor(heading: str) -> str:
-    """Derive a stable slug from a Markdown heading line (without the leading #s)."""
-    text = re.sub(r"[^\w\s-]", "", heading.strip().lower())
-    return re.sub(r"[\s_]+", "-", text).strip("-")
-
-
 def provenance_targets(story: Path, chapters: list[Path]) -> set[str]:
     """Collect every identifier a canon provenance may resolve to.
 
-    Chapter file stems, chapter headings (as slugs), and every scene/beat ID in
-    ``outline/scenes/*.json`` count. The special value ``kernel`` always resolves.
+    Chapter file stems and every scene/beat ID in ``outline/scenes/*.json``
+    count. The special value ``kernel`` always resolves. Heading-derived slugs
+    are deliberately excluded: headings are prose and are not stable IDs.
     """
     targets: set[str] = {"kernel"}
     for chapter in chapters:
         targets.add(chapter.stem)
-        for line in chapter.read_text(encoding="utf-8").splitlines():
-            if line.startswith("#"):
-                slug = heading_anchor(line.lstrip("#"))
-                if slug:
-                    targets.add(slug)
     scenes = story / "outline" / "scenes"
     if scenes.is_dir() and not scenes.is_symlink():
         for scene_file in sorted(scenes.glob("*.json")):
@@ -386,7 +380,36 @@ def validate_text_word_budget(text: str, raw_target: Any, label: str) -> None:
         raise ValueError(f"{label} word count {word_count} exceeds maximum {maximum}")
 
 
-def validate_working_provenance(story: Path, canon: dict[str, Any]) -> None:
+def ancestor_facts(story: Path, parent_release_id: str | None) -> set[tuple[Any, ...]]:
+    """Return exact fact records inherited through the parent chain."""
+    inherited: set[tuple[Any, ...]] = set()
+    visited: set[str] = set()
+    current = parent_release_id
+    while current is not None:
+        if current in visited:
+            raise ValueError(f"release parent cycle detected at: {current}")
+        visited.add(current)
+        release = story / "release-contracts" / current
+        canon = require_mapping(load_json(release / "canon.json"), f"{current}/canon.json")
+        for fact in canon["facts"]:
+            inherited.add(
+                (
+                    fact.get("id"),
+                    fact.get("status"),
+                    fact.get("statement"),
+                    fact.get("provenance"),
+                )
+            )
+        contract = require_mapping(load_json(release / "contract.json"), f"{current}/contract.json")
+        current = contract["parent_release_id"]
+    return inherited
+
+
+def validate_working_provenance(
+    story: Path,
+    canon: dict[str, Any],
+    parent_release_id: str | None,
+) -> None:
     """When chapters exist, working provenance must resolve to real prose or scenes.
 
     Short-form stories with no chapter files keep free-form provenance: the whole
@@ -401,14 +424,25 @@ def validate_working_provenance(story: Path, canon: dict[str, Any]) -> None:
     if not chapters:
         return
     targets = provenance_targets(story, chapters)
+    inherited = ancestor_facts(story, parent_release_id)
     for fact in canon["facts"]:
         if fact["status"] not in PROVENANCE_REQUIRED_STATUSES:
             continue
+        identity = (
+            fact.get("id"),
+            fact.get("status"),
+            fact.get("statement"),
+            fact.get("provenance"),
+        )
+        if identity in inherited:
+            continue
         provenance = fact["provenance"].strip()
         if provenance not in targets:
+            valid = ", ".join(sorted(targets))
             raise ValueError(
                 f"working/canon.json fact {fact['id']} provenance does not resolve to a "
-                f"chapter file, chapter heading, scene ID, or 'kernel': {provenance}"
+                f"chapter file stem, scene ID, or 'kernel': {provenance}; "
+                f"valid targets: {valid}"
             )
 
 
@@ -438,6 +472,19 @@ def validate_working_matches_release(story: Path, contract: dict[str, Any]) -> N
                 f"{label} differs from released {release_id}; create a child working "
                 "release instead of editing a released story"
             )
+    working_contract = dict(contract)
+    released_contract = require_mapping(
+        load_json(released / "contract.json"),
+        f"{release_id}/contract.json",
+    )
+    expected_working_contract = dict(released_contract)
+    expected_working_contract["status"] = "working"
+    expected_working_contract.pop("frozen_scope_budget", None)
+    if working_contract != expected_working_contract:
+        raise ValueError(
+            f"working/release-contract.json differs from released {release_id}; "
+            "create a child working release instead of editing a released story"
+        )
     chapters = chapter_files(story)
     manuscript = story / "working" / "manuscript.md"
     if chapters:
@@ -445,7 +492,9 @@ def validate_working_matches_release(story: Path, contract: dict[str, Any]) -> N
     elif manuscript.is_file() and not manuscript.is_symlink():
         working_text = manuscript.read_text(encoding="utf-8")
     else:
-        return
+        raise ValueError(
+            f"working prose is missing while the working set points at released {release_id}"
+        )
     approved = (released / "approved-draft.md").read_text(encoding="utf-8")
     if working_text != approved:
         raise ValueError(
@@ -479,11 +528,12 @@ def validate_manuscript(
         text = manuscript.read_text(encoding="utf-8")
     except (OSError, UnicodeError) as exc:
         raise ValueError(f"cannot read complete manuscript: {exc}") from exc
-    validate_text_word_budget(
-        text,
-        budget.get("target_words"),
-        "complete manuscript",
-    )
+    if budget.get("target_words") is not None:
+        validate_text_word_budget(
+            text,
+            budget["target_words"],
+            "complete manuscript",
+        )
 
 
 def validate_story(story: Path) -> str:
@@ -523,8 +573,8 @@ def validate_story(story: Path) -> str:
     validate_complexity(complexity)
 
     kernel = story / "kernel.md"
-    if not kernel.is_file() or not kernel.read_text(encoding="utf-8").strip():
-        raise ValueError("kernel.md must exist and be non-empty")
+    if not kernel.is_file() or kernel.is_symlink() or not kernel.read_text(encoding="utf-8").strip():
+        raise ValueError("kernel.md must exist, be non-empty, and not be a symlink")
 
     contract = require_mapping(
         load_json(story / "working" / "release-contract.json"),
@@ -620,7 +670,7 @@ def validate_story(story: Path) -> str:
     if working_is_at_rest(story, contract):
         validate_working_matches_release(story, contract)
     else:
-        validate_working_provenance(story, canon)
+        validate_working_provenance(story, canon, parent_release_id)
     return str(project["story_id"])
 
 

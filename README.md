@@ -196,7 +196,10 @@ python3 .agents/skills/story-development/scripts/release_story.py <path-to-story
 
 The release tool freezes the working kernel, canon, prose, and contract (with the
 current scope budget embedded) under `release-contracts/<release_id>/`, writes the
-SHA-256 manifest, and revalidates. It refuses when the story is invalid, the
+SHA-256 manifest, publishes the complete tree with one atomic rename, and
+revalidates. When chapters exist, it sorts their paths lexicographically, strips
+trailing newlines from each, joins them with exactly `\n\n---\n\n`, and appends
+one final newline; use zero-padded chapter prefixes. It refuses when the story is invalid, the
 working contract is not `manuscript_status: complete`, or the release already
 exists. Continue writing by opening a child release ID that names the parent.
 

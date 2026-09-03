@@ -112,10 +112,15 @@ canon and state deltas only after the passage is accepted. Discarded generations
 never become facts.
 
 When prose is split into `working/chapters/*.md`, every established fact's
-`provenance` must name a chapter file stem (`03-six-red-marks`), a heading slug
-inside one (`chapter-three-six-red-marks`), a scene ID, or `kernel`. Regenerate
-`working/manuscript.md` from the chapters (sorted, joined by a `---` rule) so the
-aggregate never lags the parts; the validator rejects a stale aggregate.
+`provenance` must name a chapter file stem (`03-six-red-marks`), a scene ID, or
+`kernel`. Prefer scene IDs when a fact needs finer or rename-stable location.
+Facts inherited unchanged from an ancestor release keep their original
+provenance even when it predates this rule.
+
+Regenerate `working/manuscript.md` by sorting chapter paths lexicographically
+(use zero-padded numeric prefixes), stripping trailing newlines from each file,
+joining them with exactly `\n\n---\n\n`, and appending one final newline. The
+validator rejects a stale aggregate.
 
 Completion: accepted prose and state agree, and every new established fact has
 provenance that resolves to real text.
@@ -143,9 +148,11 @@ It requires a valid story whose working contract declares
 chapters when present), and contract with the current scope budget, writes the
 manifest, and re-validates. It refuses to touch an existing release tree.
 
-While the working set still points at a released ID, it must stay byte-identical
-to that release; the validator treats any drift as editing a released story. To
-keep writing, open a child: new `release_id`, `parent_release_id` naming the
+While the working set still points at a released ID, its kernel and canon must
+stay byte-identical to the release, its contract must equal the released contract
+apart from `status` and `frozen_scope_budget`, and its prose must be text-identical
+to the approved draft. The validator treats drift as editing a released story.
+To keep writing, open a child: new `release_id`, `parent_release_id` naming the
 release, `active_release_id` updated to match.
 
 Never edit a released parent to make a child fit. Save an expansion audit under
@@ -198,7 +205,8 @@ Before claiming completion, verify:
 - the active working set has a nonempty, non-symlinked `LICENSE.md` and satisfies
   its own scope and complexity requirements;
 - every released tree matches its manifest and frozen budget;
-- a working set that reuses a released ID is byte-identical to that release;
+- a working set that reuses a released ID has identical kernel, canon, contract
+  semantics, and prose as described above;
 - a child’s parent exists and remains unchanged;
 - canon fact IDs are unique within each canon view; inherited facts may retain
   their IDs across parent and child views, and required statuses carry provenance;

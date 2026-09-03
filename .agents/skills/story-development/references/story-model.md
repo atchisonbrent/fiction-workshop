@@ -53,10 +53,12 @@ provenance and retcons remain traceable across releases. Parent snapshots never
 change.
 
 Provenance is free-form while the whole text fits one reading. Once prose lives in
-`working/chapters/*.md`, provenance must resolve: a chapter file stem, a heading
-slug within a chapter (lowercase, punctuation stripped, spaces to hyphens), a
-scene ID from `outline/scenes/`, or `kernel`. This is what makes "load only the
-relevant prose" possible at novella scale without a database.
+`working/chapters/*.md`, provenance on a new or changed fact must resolve to a
+chapter file stem, a scene ID from `outline/scenes/`, or `kernel`. Prefer scene
+IDs for finer or rename-stable location; headings are prose, not stable IDs.
+Facts copied unchanged from an ancestor canon retain their historic provenance.
+This makes "load only the relevant prose" possible at novella scale without
+rewriting the shorter work's history or adding a database.
 
 ## Character evidence
 

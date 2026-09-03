@@ -13,8 +13,12 @@ the working set already validates. It never touches an existing release tree.
 from __future__ import annotations
 
 import argparse
+import copy
 import json
+import os
+import shutil
 import sys
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -39,16 +43,20 @@ def working_prose(story: Path) -> bytes:
     chapters = chapter_files(story)
     manuscript = story / "working" / "manuscript.md"
     if chapters:
-        assembled = assemble_manuscript(chapters).encode("utf-8")
-        if manuscript.is_file() and manuscript.read_bytes() != assembled:
-            raise ValueError(
-                "working/manuscript.md is stale relative to working/chapters/; "
-                "regenerate it before releasing"
-            )
-        return assembled
-    if manuscript.is_file() and not manuscript.is_symlink():
-        return manuscript.read_bytes()
-    raise ValueError("nothing to release: no working/chapters/*.md or working/manuscript.md")
+        return assemble_manuscript(chapters).encode("utf-8")
+    return manuscript.read_bytes()
+
+
+def write_release_tree(directory: Path, release_id: str, outputs: dict[str, bytes]) -> None:
+    """Write and hash one complete release tree inside a private staging dir."""
+    for name, data in outputs.items():
+        (directory / name).write_bytes(data)
+    manifest = {
+        "schema_version": 1,
+        "release_id": release_id,
+        "files": {name: file_sha256(directory / name) for name in sorted(outputs)},
+    }
+    (directory / "manifest.json").write_text(dump_json(manifest), encoding="utf-8")
 
 
 def build_release(story: Path, *, dry_run: bool) -> Path:
@@ -58,7 +66,7 @@ def build_release(story: Path, *, dry_run: bool) -> Path:
     contract = load_json(story / "working" / "release-contract.json")
     release_id = contract["release_id"]
     released = story / "release-contracts" / release_id
-    if released.exists():
+    if released.exists() or released.is_symlink():
         raise ValueError(
             f"release {release_id} already exists; bump working release_id "
             "(and normally set parent_release_id) before releasing again"
@@ -71,7 +79,7 @@ def build_release(story: Path, *, dry_run: bool) -> Path:
 
     frozen_contract = dict(contract)
     frozen_contract["status"] = "released"
-    frozen_contract["frozen_scope_budget"] = project["current_scope_budget"]
+    frozen_contract["frozen_scope_budget"] = copy.deepcopy(project["current_scope_budget"])
 
     outputs: dict[str, bytes] = {
         "contract.json": dump_json(frozen_contract).encode("utf-8"),
@@ -85,18 +93,25 @@ def build_release(story: Path, *, dry_run: bool) -> Path:
         print(f"would release {release_id} with files: {', '.join(sorted(outputs))}")
         return released
 
-    released.mkdir(parents=True, exist_ok=False)
-    for name, data in outputs.items():
-        (released / name).write_bytes(data)
-    manifest = {
-        "schema_version": 1,
-        "release_id": release_id,
-        "files": {name: file_sha256(released / name) for name in sorted(outputs)},
-    }
-    (released / "manifest.json").write_text(dump_json(manifest), encoding="utf-8")
-
-    # Re-validate so a half-written release never survives silently.
-    validate_story(story)
+    releases = story / "release-contracts"
+    if releases.is_symlink() or (releases.exists() and not releases.is_dir()):
+        raise ValueError("release-contracts must be a real directory")
+    releases.mkdir(parents=True, exist_ok=True)
+    staging = Path(tempfile.mkdtemp(prefix=f".{release_id}.staging-", dir=releases))
+    published = False
+    try:
+        write_release_tree(staging, release_id, outputs)
+        # Rename within release-contracts is atomic: readers see no release until
+        # every protected file and its manifest are present in the staging tree.
+        os.replace(staging, released)
+        published = True
+        validate_story(story)
+    except BaseException:
+        if published and released.is_dir() and not released.is_symlink():
+            shutil.rmtree(released)
+        elif staging.is_dir() and not staging.is_symlink():
+            shutil.rmtree(staging)
+        raise
     return released
 
 
@@ -111,7 +126,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     try:
         released = build_release(args.story.resolve(), dry_run=args.dry_run)
-    except ValueError as exc:
+    except (ValueError, OSError, UnicodeError) as exc:
         print(f"release failed: {exc}", file=sys.stderr)
         return 1
     if not args.dry_run:

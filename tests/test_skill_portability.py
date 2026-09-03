@@ -62,6 +62,7 @@ class SkillPortabilityTests(unittest.TestCase):
         skill = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
         self.assertIn("SKILL_DIR", skill)
         self.assertIn("<SKILL_DIR>/scripts/validate_story.py", skill)
+        self.assertIn("<SKILL_DIR>/scripts/release_story.py", skill)
         self.assertNotIn(".hermes/skills/story-development", skill)
         self.assertNotIn("terminal(command=", skill)
         self.assertNotIn("Work from this repository", skill)

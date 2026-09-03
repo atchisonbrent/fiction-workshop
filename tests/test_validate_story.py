@@ -741,6 +741,10 @@ class ValidateStoryTests(unittest.TestCase):
             (chapters / "01-arrival.md").write_text(
                 "# Story\n\n## Chapter One: The Cold Desk\n\nProse.\n", encoding="utf-8"
             )
+            write_json(
+                story / "outline" / "scenes" / "arrival.json",
+                {"id": "cold-desk", "kind": "scene", "pov": "a", "outcome": "b"},
+            )
             canon = {
                 "lineage": "main",
                 "facts": [
@@ -750,7 +754,7 @@ class ValidateStoryTests(unittest.TestCase):
                         "id": "c",
                         "status": "character_belief",
                         "statement": "C.",
-                        "provenance": "chapter-one-the-cold-desk",
+                        "provenance": "cold-desk",
                     },
                     {"id": "d", "status": "proposed", "statement": "D."},
                 ],
@@ -767,6 +771,141 @@ class ValidateStoryTests(unittest.TestCase):
 
             # Unchaptered short work keeps free-form provenance.
             shutil.rmtree(chapters)
+            result = self.run_validator(story)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_chaptered_child_preserves_inherited_free_form_provenance(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            story = Path(tmp) / "child-provenance"
+            make_valid_flash(story, "flash-v2", parent_release_id="flash-v1")
+            budget = json.loads((story / "project.json").read_text())["current_scope_budget"]
+            parent = make_released_snapshot(story, "flash-v1", budget)
+            parent_canon = {
+                "lineage": "main",
+                "facts": [
+                    {
+                        "id": "inherited",
+                        "status": "established",
+                        "statement": "This came from the short.",
+                        "provenance": "short-v1:opening",
+                    }
+                ],
+            }
+            write_json(parent / "canon.json", parent_canon)
+            rehash_released_snapshot(parent)
+            chapters = story / "working" / "chapters"
+            chapters.mkdir(parents=True)
+            (chapters / "01-child.md").write_text("# Child\n\nNew prose.\n", encoding="utf-8")
+            child_canon = {
+                "lineage": "main",
+                "facts": parent_canon["facts"]
+                + [
+                    {
+                        "id": "new",
+                        "status": "established",
+                        "statement": "This came from the child.",
+                        "provenance": "01-child",
+                    }
+                ],
+            }
+            write_json(story / "working" / "canon.json", child_canon)
+            result = self.run_validator(story)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+            # A changed inherited record is no longer exempt and must resolve.
+            child_canon["facts"][0]["statement"] = "Silently changed."
+            write_json(story / "working" / "canon.json", child_canon)
+            result = self.run_validator(story)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("fact inherited provenance does not resolve", result.stderr)
+
+    def test_at_rest_guard_covers_canon_contract_and_chaptered_prose(self) -> None:
+        budget = {
+            "planning_resolution": "flash",
+            "publication_shape": "standalone",
+            "target_mode": "bounded",
+            "reader_promise": "A complete turn.",
+            "closure_posture": "closed",
+            "revisit_policy": "expandable",
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            story = Path(tmp) / "at-rest-more"
+            make_valid_flash(story, "flash-v1")
+            released = make_released_snapshot(story, "flash-v1", budget)
+            (story / "kernel.md").write_bytes((released / "kernel.md").read_bytes())
+            (story / "working" / "canon.json").write_bytes((released / "canon.json").read_bytes())
+            prose = (released / "approved-draft.md").read_text(encoding="utf-8")
+            (story / "working" / "manuscript.md").write_text(prose, encoding="utf-8")
+
+            (story / "working" / "manuscript.md").unlink()
+            result = self.run_validator(story)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("working prose is missing", result.stderr)
+            (story / "working" / "manuscript.md").write_text(prose, encoding="utf-8")
+
+            canon = json.loads((story / "working" / "canon.json").read_text())
+            canon["facts"] = [
+                {"id": "x", "status": "proposed", "statement": "Drift."}
+            ]
+            write_json(story / "working" / "canon.json", canon)
+            result = self.run_validator(story)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("working/canon.json differs", result.stderr)
+
+            (story / "working" / "canon.json").write_bytes((released / "canon.json").read_bytes())
+            contract = json.loads(
+                (story / "working" / "release-contract.json").read_text(encoding="utf-8")
+            )
+            contract["reader_promise"] = "Drifted promise."
+            write_json(story / "working" / "release-contract.json", contract)
+            result = self.run_validator(story)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("working/release-contract.json differs", result.stderr)
+
+            contract["reader_promise"] = "A complete turn."
+            write_json(story / "working" / "release-contract.json", contract)
+            chapters = story / "working" / "chapters"
+            chapters.mkdir()
+            (chapters / "01-only.md").write_text(prose, encoding="utf-8")
+            result = self.run_validator(story)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            (chapters / "02-extra.md").write_text("Extra.\n", encoding="utf-8")
+            result = self.run_validator(story)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("working/manuscript.md is stale", result.stderr)
+
+    def test_chapters_directory_and_kernel_cannot_be_symlinks(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            story = root / "links"
+            make_valid_flash(story, "flash-v1")
+            external = root / "external"
+            external.mkdir()
+            (story / "working" / "chapters").symlink_to(external, target_is_directory=True)
+            result = self.run_validator(story)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("working/chapters must be a real directory", result.stderr)
+
+            (story / "working" / "chapters").unlink()
+            kernel_text = (story / "kernel.md").read_text(encoding="utf-8")
+            (story / "kernel.md").unlink()
+            external_kernel = root / "kernel.md"
+            external_kernel.write_text(kernel_text, encoding="utf-8")
+            (story / "kernel.md").symlink_to(external_kernel)
+            result = self.run_validator(story)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("kernel.md must exist, be non-empty, and not be a symlink", result.stderr)
+
+    def test_complete_targetless_exploratory_story_validates(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            story = Path(tmp) / "targetless"
+            make_valid_flash(story, "flash-v1")
+            contract = json.loads(
+                (story / "working" / "release-contract.json").read_text(encoding="utf-8")
+            )
+            contract["manuscript_status"] = "complete"
+            write_json(story / "working" / "release-contract.json", contract)
+            (story / "working" / "manuscript.md").write_text("Complete at its natural length.\n")
             result = self.run_validator(story)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
