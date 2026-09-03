@@ -1,4 +1,5 @@
 import importlib.util
+import errno
 import json
 import shutil
 import subprocess
@@ -214,6 +215,59 @@ class ReleaseStoryTests(unittest.TestCase):
                 with self.assertRaisesRegex(OSError, "simulated disk full"):
                     release_story.build_release(story, dry_run=False)
             self.assertFalse(released.exists())
+            self.assertEqual([], list((story / "release-contracts").glob(".*.staging-*")))
+
+    def test_interrupt_after_publish_preserves_the_complete_release(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            story = Path(tmp) / "small-mercy"
+            released = self.rewind_example_to_short_working_set(story)
+            real_validate = release_story.validate_story
+            calls = 0
+
+            def interrupt_second_validation(path: Path) -> str:
+                nonlocal calls
+                calls += 1
+                if calls == 2:
+                    raise KeyboardInterrupt
+                return real_validate(path)
+
+            with mock.patch.object(
+                release_story,
+                "validate_story",
+                side_effect=interrupt_second_validation,
+            ):
+                with self.assertRaises(KeyboardInterrupt):
+                    release_story.build_release(story, dry_run=False)
+            self.assertTrue(released.is_dir())
+            manifest = read_json(released / "manifest.json")
+            self.assertEqual(
+                {"contract.json", "kernel.md", "approved-draft.md", "canon.json"},
+                set(manifest["files"]),
+            )
+
+    def test_staged_release_inherits_release_contracts_directory_mode(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            story = Path(tmp) / "small-mercy"
+            released = self.rewind_example_to_short_working_set(story)
+            releases = story / "release-contracts"
+            releases.chmod(0o755)
+            result = run(RELEASER, str(story))
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertEqual(0o755, released.stat().st_mode & 0o777)
+
+    def test_concurrent_same_id_publisher_gets_clear_conflict(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            story = Path(tmp) / "small-mercy"
+            released = self.rewind_example_to_short_working_set(story)
+
+            def lose_race(source: Path, destination: Path) -> None:
+                destination.mkdir()
+                raise OSError(errno.ENOTEMPTY, "Directory not empty", destination)
+
+            with mock.patch.object(release_story.os, "replace", side_effect=lose_race):
+                with self.assertRaisesRegex(ValueError, "another publisher won the race"):
+                    release_story.build_release(story, dry_run=False)
+            self.assertTrue(released.is_dir(), "the winning publisher's release is preserved")
             self.assertEqual([], list((story / "release-contracts").glob(".*.staging-*")))
 
     def test_dangling_symlink_release_is_refused_cleanly(self) -> None:

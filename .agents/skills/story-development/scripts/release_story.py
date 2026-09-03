@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import errno
 import json
 import os
 import shutil
@@ -98,6 +99,7 @@ def build_release(story: Path, *, dry_run: bool) -> Path:
         raise ValueError("release-contracts must be a real directory")
     releases.mkdir(parents=True, exist_ok=True)
     staging = Path(tempfile.mkdtemp(prefix=f".{release_id}.staging-", dir=releases))
+    os.chmod(staging, releases.stat().st_mode & 0o777)
     published = False
     try:
         write_release_tree(staging, release_id, outputs)
@@ -106,7 +108,19 @@ def build_release(story: Path, *, dry_run: bool) -> Path:
         os.replace(staging, released)
         published = True
         validate_story(story)
-    except BaseException:
+    except OSError as exc:
+        if staging.is_dir() and not staging.is_symlink():
+            shutil.rmtree(staging)
+        if not published and exc.errno in {errno.EEXIST, errno.ENOTEMPTY} and (
+            released.exists() or released.is_symlink()
+        ):
+            raise ValueError(
+                f"release {release_id} already exists; another publisher won the race"
+            ) from exc
+        if published and released.is_dir() and not released.is_symlink():
+            shutil.rmtree(released)
+        raise
+    except Exception:
         if published and released.is_dir() and not released.is_symlink():
             shutil.rmtree(released)
         elif staging.is_dir() and not staging.is_symlink():
