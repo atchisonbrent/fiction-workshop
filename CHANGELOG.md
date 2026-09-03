@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.3.0](https://github.com/atchisonbrent/fiction-workshop/compare/v0.2.1...v0.3.0) (2026-09-03)
+
+
+### Features
+
+* add release tool and drift guards for released stories ([29caabc](https://github.com/atchisonbrent/fiction-workshop/commit/29caabcfa3606823ec7957c995f9f2fdd87a5cbe))
+
+
+### Bug Fixes
+
+* close release and provenance review gaps ([e27a02f](https://github.com/atchisonbrent/fiction-workshop/commit/e27a02f43160a3a78fba39bae43a46b06c694076))
+* harden release publication edge cases ([ab25f83](https://github.com/atchisonbrent/fiction-workshop/commit/ab25f839bde1239fe43bc3ad55a6d5b56389416e))
+* tolerate interrupted release staging ([502ed9a](https://github.com/atchisonbrent/fiction-workshop/commit/502ed9a8d4613762c96c52de10bce2600cdb5418))
+
 ## [0.2.1](https://github.com/atchisonbrent/fiction-workshop/compare/v0.2.0...v0.2.1) (2026-08-31)
 
 
