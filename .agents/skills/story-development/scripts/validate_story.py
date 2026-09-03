@@ -25,6 +25,9 @@ VALID_PUBLICATION_SHAPES = {
 }
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 RELEASE_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
+RELEASE_STAGING_RE = re.compile(
+    r"^\.[A-Za-z0-9][A-Za-z0-9._-]*\.staging-[A-Za-z0-9_-]+$"
+)
 RELEASE_REQUIRED_FILES = {
     "contract.json",
     "kernel.md",
@@ -58,9 +61,13 @@ def chapter_files(story: Path) -> list[Path]:
         return []
     if not chapters.is_dir():
         raise ValueError("working/chapters must be a directory")
-    return sorted(
-        path for path in chapters.glob("*.md") if path.is_file() and not path.is_symlink()
-    )
+    chapter_paths: list[Path] = []
+    for path in sorted(chapters.glob("*.md")):
+        if path.is_symlink():
+            raise ValueError(f"working/chapters contains a symlinked chapter: {path.name}")
+        if path.is_file():
+            chapter_paths.append(path)
+    return chapter_paths
 
 
 def assemble_manuscript(chapters: list[Path]) -> str:
@@ -261,6 +268,11 @@ def validate_released_snapshots(story: Path) -> None:
             raise ValueError(f"release directory cannot be a symlink: {release.name}")
         if not release.is_dir():
             continue
+        # release_story.py stages a complete tree under this private name and
+        # atomically renames it into place. A validator running concurrently —
+        # or after a hard power loss leaves residue — must ignore that non-release.
+        if RELEASE_STAGING_RE.fullmatch(release.name):
+            continue
         if not RELEASE_ID_RE.fullmatch(release.name):
             raise ValueError(f"unsafe release directory name: {release.name}")
         manifest_path = release / "manifest.json"
@@ -349,7 +361,9 @@ def validate_release_parent_cycles(story: Path) -> None:
     release_ids = {
         path.name
         for path in releases.iterdir()
-        if path.is_dir() and not path.is_symlink()
+        if path.is_dir()
+        and not path.is_symlink()
+        and RELEASE_ID_RE.fullmatch(path.name)
     }
     for start in sorted(release_ids):
         visited: set[str] = set()

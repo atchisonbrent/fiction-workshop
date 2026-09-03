@@ -110,35 +110,44 @@ class ReleaseStoryTests(unittest.TestCase):
     def test_release_refuses_to_overwrite_an_existing_release(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             story = Path(tmp) / "small-mercy"
-            shutil.copytree(EXAMPLE, story)
-            contract = read_json(story / "working" / "release-contract.json")
-            contract["manuscript_status"] = "complete"
-            write_json(story / "working" / "release-contract.json", contract)
-            (story / "working" / "manuscript.md").write_text(
-                " ".join(["word"] * 20000) + "\n", encoding="utf-8"
-            )
+            self.rewind_example_to_short_working_set(story)
+            first = run(RELEASER, str(story))
+            self.assertEqual(first.returncode, 0, first.stdout + first.stderr)
             before = {
                 path: path.read_bytes()
                 for path in (story / "release-contracts").rglob("*")
                 if path.is_file()
             }
-            # Point the working set at the already-released ID.
-            project = read_json(story / "project.json")
-            project["active_release_id"] = "short-v1"
-            write_json(story / "project.json", project)
-            contract["release_id"] = "short-v1"
-            contract["parent_release_id"] = None
-            write_json(story / "working" / "release-contract.json", contract)
 
             result = run(RELEASER, str(story))
             self.assertNotEqual(result.returncode, 0)
-            self.assertIn("release failed:", result.stderr)
+            self.assertIn("release short-v1 already exists", result.stderr)
             after = {
                 path: path.read_bytes()
                 for path in (story / "release-contracts").rglob("*")
                 if path.is_file()
             }
             self.assertEqual(before, after, "release tree must never be touched on failure")
+
+    def test_stale_staging_residue_does_not_brick_validation_or_release(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            story = Path(tmp) / "small-mercy"
+            released = self.rewind_example_to_short_working_set(story)
+            residue = story / "release-contracts" / ".short-v1.staging-deadbeef"
+            residue.mkdir(parents=True)
+            (residue / "partial").write_text("interrupted")
+
+            self.assertEqual(run(VALIDATOR, str(story)).returncode, 0)
+            result = run(RELEASER, str(story))
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertTrue(released.is_dir())
+            self.assertTrue(residue.is_dir(), "unrelated residue is ignored, not destroyed")
+
+            malformed = story / "release-contracts" / ".not-a-staging-dir"
+            malformed.mkdir()
+            result = run(VALIDATOR, str(story))
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("unsafe release directory name", result.stderr)
 
     def test_release_requires_complete_manuscript_status_and_valid_story(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

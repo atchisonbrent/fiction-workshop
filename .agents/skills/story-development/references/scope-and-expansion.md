@@ -62,6 +62,10 @@ and a safe `decision_ref` beneath `decisions/` explaining reason and consequence
 The superseded ID must exist in an ancestor canon. Retcon is an explicit
 creative choice, not a continuity error with paperwork added afterward.
 
+Legacy releases created before the release tool may omit `manuscript_status`.
+Do not backfill their hashed contracts or add the field only to an at-rest working
+contract. Leave the pair unchanged; open a child release before further work.
+
 ## Long-form operating cadence
 
 For novella and above:

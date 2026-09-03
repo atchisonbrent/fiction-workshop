@@ -887,6 +887,16 @@ class ValidateStoryTests(unittest.TestCase):
             self.assertIn("working/chapters must be a real directory", result.stderr)
 
             (story / "working" / "chapters").unlink()
+            chapters = story / "working" / "chapters"
+            chapters.mkdir()
+            external_chapter = external / "01-linked.md"
+            external_chapter.write_text("# Linked\n\nOutside.\n", encoding="utf-8")
+            (chapters / "01-linked.md").symlink_to(external_chapter)
+            result = self.run_validator(story)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("working/chapters contains a symlinked chapter", result.stderr)
+
+            shutil.rmtree(chapters)
             kernel_text = (story / "kernel.md").read_text(encoding="utf-8")
             (story / "kernel.md").unlink()
             external_kernel = root / "kernel.md"
