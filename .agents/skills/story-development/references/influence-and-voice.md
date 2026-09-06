@@ -116,8 +116,10 @@ transcript. Read consecutive turns together. Sometimes a personal answer, an
 unfinished thought, a gesture or no reply carries the moment better than another
 "yes", "I know" or "all right". Do not mechanically swap synonyms, lengthen every
 reply, or make every speaker witty. Preserve deliberate repetition and bluntness
-where pressure, evasion or characterization earns them. Also question emotional
-insights delivered more neatly than this speaker could plausibly formulate them.
+where pressure, evasion or characterization earns them. Terse, mock-serious assent
+can be the whole joke; do not expand it or add a smile tag merely to explain how
+it should be heard. Naturalness is not length. Also question emotional insights
+delivered more neatly than this speaker could plausibly formulate them.
 
 ## Prose audit
 
