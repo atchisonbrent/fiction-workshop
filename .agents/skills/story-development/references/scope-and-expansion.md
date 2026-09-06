@@ -13,6 +13,31 @@ Length follows the dramatic unit being completed:
 Word targets are planning budgets. Do not inflate a complete short work to meet a
 preset. “Keep it short” is a successful scope decision.
 
+## Reader checkpoints and scope changes
+
+For an opening installment or a work being developed with a reader, use an
+optional short checkpoint in the existing decision notes or handoff. State:
+
+- what this installment delivers now and what deliberately remains open;
+- which future beats are planned, which are tentative alternatives, and which
+  earlier ideas are superseded;
+- two or three useful feedback questions, such as where interest increased or
+  attention drifted, rather than asking only whether the reader liked it.
+
+A checkpoint is not another mandatory template or approval ceremony. Do not
+pause a requested complete work at an opening installment without the user's
+agreement. An eventual length ambition does not itself authorize changing the
+current deliverable. Record the source of a meaningful scope change; do not
+attribute an inferred preference to the reader as an explicit instruction.
+
+When the agreed scope changes, reconcile the current kernel, budget, contract,
+and planning horizon before drafting further. Preserve the rationale in
+`decisions/`; remove superseded instructions from the live plan or mark them
+unambiguously inactive. Use a child release when a frozen version is affected.
+An unused outline is not canon and does not obligate the story to reach its
+ending. Prefer a detailed near horizon and a provisional farther direction to
+an elaborate plan maintained only because it already exists.
+
 ## Expansion modes
 
 Modes may compose and must be recorded in the child contract:

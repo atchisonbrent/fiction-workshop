@@ -53,6 +53,32 @@ is good; arbitrary convenience is not.
 - Has long-form planning produced repetitive scene functions?
 - Would compression strengthen the work?
 
+## Reader experience
+
+- What does this scene give the reader: curiosity, pleasure, tension, intimacy,
+  wonder, relief, or another intended experience? A continuity delta alone is
+  not a reason to retain it.
+- Do successive scenes repeat the same lesson or emotional turn, even when
+  their events differ? Change the scene function, not just the scenery.
+- Have explanations of competence, kindness, or theme survived after the action
+  already demonstrates them? Test removing the explanation.
+- Do characters retain different priorities and verbal rhythms, or has everyone
+  become equally articulate, perceptive, or witty?
+
+Use these questions as editorial lenses, not quotas for jokes, action, or
+revelations. Quiet enjoyment can justify a scene; technical validity cannot
+certify it. Reader feedback is evidence, not a vote that automatically overrides
+the story's intent.
+
+## Revision-local continuity check
+
+After repairing a consequential sentence or scene, re-read the changed passage
+against its surrounding sequence and the affected canon or obligation. Check
+who is present, when the event happens, how each person could know it, and what
+later passage depends on it. A repair can introduce a new contradiction even
+when it removes the original one. Close the finding on the revised text, not
+on the proposed fix; update state only after selecting the revision.
+
 ## AI-tell and freshness pass
 
 Flag clichés, redundant exposition, generic emotional summaries, purple prose,

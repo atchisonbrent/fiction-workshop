@@ -69,7 +69,9 @@ reading experience. Word targets are budgets, not quotas.
 
 Load `<SKILL_DIR>/references/scope-and-expansion.md` when choosing length or growing prior
 material. Completion: the current budget states a reader promise and still
-allows “keep it short” as a valid outcome.
+allows “keep it short” as a valid outcome. For agreed opening installments, use
+the optional reader checkpoint in that reference; do not substitute an opening
+for a requested complete work without agreement.
 
 ### 3. Generate genuinely different possibilities
 
@@ -131,6 +133,10 @@ Load `<SKILL_DIR>/references/editorial-rubrics.md`. Run only the lenses activate
 and complexity: causality/time, character, world/facts, obligation/payoff, POV
 and tone, pacing/necessity, prose, and freshness/imitation risk. Findings cite
 both conflicting passages or the exact obligation they concern.
+
+After repairs, re-check the revised passages for new time, knowledge, and
+dependency errors. Include reader experience as well as structural correctness;
+a scene can be consistent and still be unnecessary or dull.
 
 Completion: blockers are repaired or explicitly accepted; editorial opinion is
 not misreported as deterministic validation.
