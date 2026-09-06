@@ -183,7 +183,7 @@ Return:
   disclose the omitted categories and request continuation rather than silently
   suppressing feedback.
 - Name what would require structural revision versus a local correction.
-- End with remaining uncertainty and two useful questions for the human reader.
+- End with remaining uncertainty and useful questions for the human reader.
 Stop when this bounded pass is complete. No automatic new review or coauthor loop.
 ```
 
