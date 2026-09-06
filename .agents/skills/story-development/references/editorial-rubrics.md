@@ -55,6 +55,38 @@ is good; arbitrary convenience is not.
 - Has long-form planning produced repetitive scene functions?
 - Would compression strengthen the work?
 
+## Scene completeness without padding
+
+Use this lens when a reader reports rushed scenes or when a continuation depends
+on a consequential exchange previously summarized. Read the whole relevant arc,
+not just the apparently thin passages. For each scene, ask:
+
+- Can the reader enter it: who is present, where and when, and what is underway?
+- Does the reader experience the important work, discovery, choice or emotional
+  turn, or only receive a statement that it happened?
+- Is there enough action, response, hesitation or aftermath to make the next
+  scene intelligible and emotionally credible?
+- Does the exit carry us forward without explaining the lesson again?
+
+These are diagnostic questions, not a required four-beat scene template. A quiet
+pleasure, unresolved conversation or short transition need not acquire conflict.
+Different witnesses can react at different times or opt out; a group need not
+resolve its feelings together before the story can continue.
+
+Choose among dramatization, compression, resequencing, deletion and no change.
+If a promised rehearsal is consequential, show enough of the attempt and response
+for its later outcome to mean something. If transit or another rehearsal repeats
+a completed function, summary may serve it better. When moving a remembered
+exchange into chronology, remove its duplicate retelling and check every later
+knowledge dependency. Do not add artificial mistakes, danger or reassurance to
+make a scene look developed.
+
+Retain a compact scene-level account of what was reviewed, changed and deliberately
+left alone. An inventory proves coverage of a list, not reading or literary
+quality. Word counts measure extent, not completeness; equal lengths and universal
+expansion are not goals. Re-read revised passages with their transitions and
+re-review material changes under the independent editorial review guidance.
+
 ## Reader experience
 
 - What does this scene give the reader: curiosity, pleasure, tension, intimacy,
