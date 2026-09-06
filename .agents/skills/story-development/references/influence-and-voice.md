@@ -107,6 +107,18 @@ unintentional defaults:
 The ledger does not ban repetition. It makes repetition visible so it can become
 a deliberate motif or be replaced at the mechanism level.
 
+## Spoken dialogue and social intention
+
+Check what a reply is doing between these people, not just whether it answers
+the question. A bare affirmative can convey certainty, shock or clear assent;
+in a celebratory or affectionate exchange it may instead sound like an interview
+transcript. Read consecutive turns together. Sometimes a personal answer, an
+unfinished thought, a gesture or no reply carries the moment better than another
+"yes", "I know" or "all right". Do not mechanically swap synonyms, lengthen every
+reply, or make every speaker witty. Preserve deliberate repetition and bluntness
+where pressure, evasion or characterization earns them. Also question emotional
+insights delivered more neatly than this speaker could plausibly formulate them.
+
 ## Prose audit
 
 Remove generic uplift, redundant exposition, forced metaphors, interchangeable
