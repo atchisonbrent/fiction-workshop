@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/atchisonbrent/fiction-workshop/compare/v0.3.0...v0.4.0) (2026-09-06)
+
+
+### Features
+
+* export private reading editions from frozen stories ([3294312](https://github.com/atchisonbrent/fiction-workshop/commit/3294312546c266894d25d5bbed6d060ada069711))
+
 ## [0.3.0](https://github.com/atchisonbrent/fiction-workshop/compare/v0.2.1...v0.3.0) (2026-09-03)
 
 
