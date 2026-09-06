@@ -203,6 +203,14 @@ one final newline; use zero-padded chapter prefixes. It refuses when the story i
 working contract is not `manuscript_status: complete`, or the release already
 exists. Continue writing by opening a child release ID that names the parent.
 
+## Reading editions
+
+Optional EPUB/HTML export uses Pandoc and EPUBCheck, without changing frozen
+story snapshots. See [.agents/skills/story-development/references/reading-editions.md](.agents/skills/story-development/references/reading-editions.md)
+for dependencies, the command, limitations and private delivery verification.
+Converter integration tests skip explicitly when dependencies are absent.
+This is a local export command, not a story hosting or publishing service.
+
 ## Publication boundary
 
 This repository ships **tooling plus one curated original example**. Personal

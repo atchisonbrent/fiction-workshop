@@ -170,6 +170,11 @@ superseded fact; the parent snapshot remains unchanged.
 Completion: the parent still passes its manifest and frozen-budget validation,
 and the audit identifies the new dramatic question that earns the added length.
 
+For reader delivery, load `<SKILL_DIR>/references/reading-editions.md`. Prefer
+EPUB plus an HTML preview generated from the named frozen release, and verify
+an accessible private download rather than reporting a local path as delivery.
+Keep canonical content in the user's existing story repository when available.
+
 ### 9. Apply voice and influence deliberately
 
 Load `<SKILL_DIR>/references/influence-and-voice.md`. Use craft dimensions and transformed
