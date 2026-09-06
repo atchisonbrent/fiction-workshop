@@ -53,6 +53,27 @@ voice closely, or treat an artist’s corpus as a bag of verbal tics. When the u
 names an influence, translate it into craft dimensions and confirm the result
 still serves this story.
 
+## Comic range and exceptional characters
+
+Humor belongs to a situation and speaker, not a quota. If the reader welcomes
+rougher or dirty humor, record its intended range in the project voice: mild
+innuendo, bodily indignity, irreverence, or sharper language are distinct tools.
+Use them where desire, embarrassment, status, or material inconvenience earns
+one; do not make the cast uniformly leering or puncture a painful scene merely
+to escape sincerity. Content boundaries and age-appropriate treatment still apply.
+
+For extraordinarily capable characters, separate what they can do from how often
+the narration needs to mention it. A repeated "could have done the impossible
+before this ordinary thing finished" construction quickly becomes self-advertising.
+Let lived actions establish scale, then trust the reader's memory. Preserve a
+few purposeful contrasts instead of replacing the whole premise with restraint.
+
+When very different capability systems meet, distinguish physical force,
+durability, knowledge, perception, technology, and social reach. Mutual surprise
+need not imply equal abilities, universal superiority, or casual neutralization.
+Establish the relevant interactions before using one side's presumed supremacy
+to settle a scene. Keep these premises in the story, not in universal workshop canon.
+
 ## Diversity protocol
 
 Before asking for alternatives, choose declared divergence axes. Useful axes:

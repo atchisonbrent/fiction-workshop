@@ -70,6 +70,27 @@ revelations. Quiet enjoyment can justify a scene; technical validity cannot
 certify it. Reader feedback is evidence, not a vote that automatically overrides
 the story's intent.
 
+## Capability, implication, and voice checks
+
+- Once a capability is established, are repeated hypothetical feats or comparisons
+  merely advertising it? Keep reminders that alter a choice, risk, joke, or
+  relationship; cut ornamental scale boasts from otherwise ordinary moments.
+  Vary scene function rather than repeatedly telling the reader how exceptional
+  a character is. Actual demonstrations often carry more weight than many asides.
+- Does the difficulty honor the declared premise? Do not invent injury, fatigue,
+  incompetence, or an effortless off-switch solely to manufacture suspense.
+  When physical danger is implausible, test other consequential limits: fragile
+  surroundings, incomplete knowledge, divided commitments, consent, or exposure.
+  Do not turn those limits into the same lesson in every scene.
+- Do competent, thoughtful people still interrupt, evade, misjudge, get annoyed,
+  make a poor joke, or want incompatible things? Do not confuse agency with
+  universal emotional insight, or make every friend a polished counselor.
+  Friction need not mean cruelty; decency need not mean perfect manners.
+- Has a concrete detail opened an implication the ending silently forgets?
+  Witnesses, recordings, promised meetings, and physical props can create reader
+  expectations. Give them proportionate follow-through or visible deferral,
+  without promoting every consequence into another full subplot.
+
 ## Revision-local continuity check
 
 After repairing a consequential sentence or scene, re-read the changed passage
