@@ -134,6 +134,11 @@ and complexity: causality/time, character, world/facts, obligation/payoff, POV
 and tone, pacing/necessity, prose, and freshness/imitation risk. Findings cite
 both conflicting passages or the exact obligation they concern.
 
+For independent review, load `<SKILL_DIR>/references/independent-editorial-review.md`.
+Default to a short brief and manuscript pointer with approved read-only access;
+let the reviewer read the work. Separate reader-response, developmental,
+continuity, and line-edit jobs; activate only what the current draft needs.
+
 After repairs, re-check the revised passages for new time, knowledge, and
 dependency errors. Include reader experience as well as structural correctness;
 a scene can be consistent and still be unnecessary or dull.

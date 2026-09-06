@@ -2,6 +2,8 @@
 
 Run separate passes. A single “improve this” prompt encourages confident mush.
 Every continuity finding cites both relevant passages, IDs, or obligations.
+For reviewer-led reading, context scope, independent handoffs, and adjudication,
+see [independent-editorial-review.md](independent-editorial-review.md).
 
 ## Causality and timeline
 
