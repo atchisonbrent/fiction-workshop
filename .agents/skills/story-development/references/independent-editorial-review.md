@@ -177,8 +177,11 @@ Return:
   reader consequence, counterevidence/alternative reading, confidence, repair scope.
 - Contradictions require both passages. A missing setup requires the range checked
   and an uncertainty label; absence is harder to prove than a conflicting sentence.
-- Rank major findings first; group minor repetitions. If an output limit prevents
-  reporting everything found, say so. Do not invent findings to meet a quota.
+- Rank major findings first and group minor repetitions, but impose no arbitrary
+  finding-count cap. Report every distinct useful concern identified; do not invent
+  findings to meet a quota. If an output limit prevents reporting everything found,
+  disclose the omitted categories and request continuation rather than silently
+  suppressing feedback.
 - Name what would require structural revision versus a local correction.
 - End with remaining uncertainty and two useful questions for the human reader.
 Stop when this bounded pass is complete. No automatic new review or coauthor loop.
