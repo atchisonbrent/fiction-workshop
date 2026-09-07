@@ -126,3 +126,21 @@ planting decisive clues: why ordinary solutions fail, why the exceptional one
 works, its limits, and what it cannot decide morally. Do not invent incompetence
 or new exceptions at payoff. Finish and review one earned unit at a time; a
 multi-arc outline is not an instruction to draft the whole ending in one pass.
+
+An arc is a production/delivery boundary, not a requirement to settle every
+introduced conflict. Plan overlapping threads with a setup, intermediate change,
+and eventual payoff across different arcs. Distinguish a local result from a
+relationship still changing, a consequence still spreading, and a book-level
+question still unresolved. Vary those rhythms; do not end each installment by
+resetting obligations or delivering another neatly stated lesson. A carried
+thread must change under pressure, not merely be mentioned again.
+
+At the start of a long work or a material redirection, ask the reader/commissioner
+only questions that alter the book's architecture: finite ending versus serial,
+desired emotional destination, welcome or forbidden irreversible changes, and
+appetite for genre/scale shifts. Offer concrete alternatives with tradeoffs when
+preferences are unknown. Do not ask again when the brief already answers them,
+or make the reader solve scene mechanics. Record approved answers and label
+inferred defaults; plan near-term scenes in detail while leaving distant routes
+revisable. Revisit this conversation when new direction changes the reader's
+promise, not at every chapter boundary.
