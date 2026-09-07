@@ -62,6 +62,34 @@ is good; arbitrary convenience is not.
 - Has long-form planning produced repetitive scene functions?
 - Would compression strengthen the work?
 
+## Revision at arc, chapter, and scene scales
+
+Use the arc as the planning and delivery unit, not as a substitute for attentive
+scene drafting. Draft individual scenes against a revisable arc destination.
+After the full draft, diagnose and repair structure first; then give each
+retained chapter a close scene-and-line pass; finally reread the arc continuously
+for flow. Local expansion can create repetition or slow an otherwise sound arc.
+Chapter boundaries package pacing; they need not dictate scene length or count.
+Independent review supplements the author's close edit, not replaces it.
+
+In the close pass, check the reader's concrete picture as well as canon:
+
+- Is an object introduced before its handling, ownership or return matters?
+- Can the reader follow who holds what, where people stand and how an action
+  follows from the preceding one, without reconstructing omitted essentials?
+- Does a sentence explain a joke or emotion already carried by the context?
+- Would a small establishing detail or a cut work better than a new paragraph?
+
+This is not a ban on telling or comic narration. Preserve deliberate narrative
+voice, useful compression and uncertainty; remove accidental ambiguity and
+redundant interpretation. More scene attention does not mean more words.
+
+Practitioner sources (retrieved 2026-09-06, not proof of one universal method):
+[Writing Excuses on scenes](https://writingexcuses.com/writing-excuses-10-25-what-makes-a-scene/),
+[structure revision](https://writingexcuses.com/12-20-retrofitting-structure-into-a-first-draft/),
+[Monica Cox on structural revision before line polishing](https://janefriedman.com/why-your-revision-shouldnt-start-on-page-one/),
+and [Peter Selgin on sentence-level choices](https://janefriedman.com/wonderful-thing-line-edits/).
+
 ## Scene completeness without padding
 
 Use this lens when a reader reports rushed scenes or when a continuation depends
