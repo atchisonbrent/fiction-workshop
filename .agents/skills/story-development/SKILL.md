@@ -109,9 +109,16 @@ specific textual support rather than a retrospective excuse.
 ### 6. Draft and update state
 
 For each beat or scene, load only relevant canon, character state, nearby prose,
-open obligations, and ancestor closing contracts. Draft prose first; commit
-canon and state deltas only after the passage is accepted. Discarded generations
-never become facts.
+open obligations, and ancestor closing contracts. Before a continuation, read
+its immediate predecessor arc and the earlier source scenes on which returning
+characters, knowledge, abilities, or unresolved promises depend. Summaries are
+retrieval aids, not substitutes for those passages. Expand retrieval when a new
+scene introduces a dependency; do not invent an answer because it was absent
+from the initial packet. For long or resumed work, record the source files/ranges
+actually supplied and any gaps in the existing review notes. Distinguish direct
+prose reading from summary-only context and an author's coverage from a reviewer's.
+Draft prose first; commit canon and state deltas only after the passage is
+accepted. Discarded generations never become facts.
 
 When prose is split into `working/chapters/*.md`, every established fact's
 `provenance` must name a chapter file stem (`03-six-red-marks`), a scene ID, or

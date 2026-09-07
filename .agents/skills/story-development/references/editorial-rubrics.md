@@ -19,6 +19,13 @@ see [independent-editorial-review.md](independent-editorial-review.md).
 - Does it follow from values, fears, relationships, or established contradiction?
 - If behavior changes, what pressure or transformation earns it?
 - Is the plot advancing because of the person, or despite them?
+- Does an informative or nonhuman character have preferences, pursuits and
+  emotional investment beyond delivering explanations? A quip is not by itself
+  a personality. Look for choices, taste, attachments, pride or irritation that
+  distinguish this person without making everyone equally witty.
+- When revising a recurring voice, check its first appearances and later
+  dependencies, not just the latest scene. Preserve serious exchanges and
+  knowledge boundaries; do not add a joke to every appearance.
 
 Do not demand consistency so rigidly that people become deterministic. Surprise
 is good; arbitrary convenience is not.
@@ -98,6 +105,12 @@ re-review material changes under the independent editorial review guidance.
   already demonstrates them? Test removing the explanation.
 - Do characters retain different priorities and verbal rhythms, or has everyone
   become equally articulate, perceptive, or witty?
+- Which experiences did the premise promise, and where are they actually
+  delivered rather than repeatedly advertised? Track missing payoff in the
+  existing obligations or decision notes, without imposing an action/joke quota.
+- Does a quiet arc change something consequential and leave the larger work
+  moving toward a decision? Separate a satisfying local ending from an earned
+  book-level climax; successive complete installments do not guarantee the latter.
 
 Use these questions as editorial lenses, not quotas for jokes, action, or
 revelations. Quiet enjoyment can justify a scene; technical validity cannot
