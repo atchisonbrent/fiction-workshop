@@ -70,7 +70,7 @@ After the full draft, diagnose and repair structure first; then give each
 retained chapter a close scene-and-line pass; finally reread the arc continuously
 for flow. Local expansion can create repetition or slow an otherwise sound arc.
 Chapter boundaries package pacing; they need not dictate scene length or count.
-Independent review supplements the author's close edit, not replaces it.
+Independent review supplements the author's close edit; it does not replace it.
 
 In the close pass, check the reader's concrete picture as well as canon:
 
