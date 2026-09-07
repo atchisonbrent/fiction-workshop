@@ -101,3 +101,28 @@ For novella and above:
 - re-outline after major reversals rather than forcing obsolete plans;
 - run a whole-work continuity pass near the midpoint, where drift commonly
   accumulates, and again before release.
+
+### Multi-arc convergence and restart state
+
+Successful local arcs do not automatically form a satisfying novel. At a major
+scope change or repeated arc pattern, choose a provisional whole-work
+confrontation, consequential character choice, and aftermath. Work backward:
+what irreversible change does each remaining arc contribute? Keep the arc count
+revisable, but do not substitute indefinite adjacent adventures for convergence.
+Protect promised pleasure and genre payoff as well as continuity; a threat should
+not automatically invalidate everything the characters enjoyed building.
+
+Use existing decisions/outline/review notes for a compact restart packet, not a
+new parallel canon system. Name the current approved direction and its source,
+superseded alternatives, established versus proposed world rules, outstanding
+mechanism tests, last accepted prose/release, next bounded dramatic unit, and
+source passages required before drafting. Record actual reading coverage and
+gaps. After compaction, reload that packet AND its source dependencies; remembered
+summaries and a reviewer's full read do not establish the author's fresh coverage.
+Update at meaningful drafting/review boundaries, not after every sentence.
+
+When a finale depends on exceptional capabilities, test alternatives before
+planting decisive clues: why ordinary solutions fail, why the exceptional one
+works, its limits, and what it cannot decide morally. Do not invent incompetence
+or new exceptions at payoff. Finish and review one earned unit at a time; a
+multi-arc outline is not an instruction to draft the whole ending in one pass.
