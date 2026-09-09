@@ -5,6 +5,11 @@ workflow, scaled to the brief, not a prescribed plot formula. It supplements
 [scope planning](scope-and-expansion.md), [voice](influence-and-voice.md) and
 [editorial review](editorial-rubrics.md); those remain the owners of their rules.
 
+Use the [default lens selection](editorial-rubrics.md#default-lens-selection)
+to separate writer preparation from editor diagnosis. Check
+[emotional credibility](editorial-rubrics.md#emotional-credibility-and-relationships)
+at chapter and arc boundaries without forcing every feeling to resolve.
+
 ## 1. Establish a destination, not a script
 
 Before long-form prose, record the reader promise, central character question,

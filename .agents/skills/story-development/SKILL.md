@@ -143,10 +143,12 @@ provenance that resolves to real text.
 
 ### 7. Review in separate passes
 
-Load `<SKILL_DIR>/references/editorial-rubrics.md`. Run only the lenses activated by scope
-and complexity: causality/time, character, world/facts, obligation/payoff, POV
-and tone, pacing/necessity, prose, and freshness/imitation risk. Findings cite
-both conflicting passages or the exact obligation they concern.
+Load `<SKILL_DIR>/references/editorial-rubrics.md` and use its default lens
+selection for the current stage. Keep characterization/agency, character voice,
+and emotional credibility distinct; select reader experience, continuity/payoff
+and POV/prose checks as needed. These are analytical lenses, not required agent
+personas or numeric scores. Findings cite exact passages; contradictions cite
+both conflicting passages or the obligation they concern.
 
 For independent review, load `<SKILL_DIR>/references/independent-editorial-review.md`.
 Default to a short brief and manuscript pointer with approved read-only access;

@@ -88,14 +88,16 @@ whereas editorial expertise offers a diagnosis. Keep those categories separate.[
 
 ## Select lenses, not a universal scorecard
 
-Use the detailed questions in [editorial-rubrics.md](editorial-rubrics.md).
+Start with the stage-appropriate [default selection](editorial-rubrics.md#default-lens-selection),
+then use the detailed questions in [editorial-rubrics.md](editorial-rubrics.md).
 Activate only the lenses that serve the story:
 
 | Lens | Useful question | Evidence to return |
 | --- | --- | --- |
 | Reader promise and closure | What does the opening teach us to anticipate, and what actually pays it off? | Opening/ending anchors; unresolved promise versus deliberate openness |
 | Scene function and pacing | Do adjacent scenes repeat the same emotional lesson? Where does attention change? | Two or more scenes and their distinct or repeated functions |
-| Character and relationship | Do choices arise from different wants, blind spots and pressures? Is closeness earned? | Decision, preceding pressure, later behavior; not just dialogue declarations |
+| Characterization and agency | Do choices arise from different wants, blind spots and pressures? | Decision, preceding pressure, later behavior |
+| Emotional credibility and relationships | Do responses and changes in trust or closeness follow from lived experience? | Preceding experience, response and later behavior; acknowledge alternative readings rather than prescribe one emotional timetable |
 | Knowledge and revelation | Who knows, suspects, misbelieves, or conceals what, and how did it reach them? | Establishing passage, transmission or inference, later use |
 | Timeline and physical staging | Can people, objects and events occupy these positions in this order? | Both anchors, explicit assumptions, calculation if needed |
 | World and capability | Are constraints stable without inventing an off-switch for convenience? | Established rule and apparent exception, including viewpoint uncertainty |

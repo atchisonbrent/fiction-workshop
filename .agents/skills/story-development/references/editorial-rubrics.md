@@ -5,17 +5,47 @@ Every continuity finding cites both relevant passages, IDs, or obligations.
 For reviewer-led reading, context scope, independent handoffs, and adjudication,
 see [independent-editorial-review.md](independent-editorial-review.md).
 
+## Default lens selection
+
+Use a small selection at the stage where it helps, not a panel of personas or
+one giant instruction to optimize everything. These six lens families route to
+existing guidance; they are not six required calls:
+
+| Lens family | Primary question | Detail |
+| --- | --- | --- |
+| Characterization and agency | Would this person make this choice? | [Character integrity](#character-integrity) |
+| Character voice and conversation | Would they say it this way, to this listener? | [Voice preparation](influence-and-voice.md#character-voice-preparation-and-maintenance) |
+| Emotional credibility and relationships | Does the response or relationship change feel earned? | [Emotional credibility](#emotional-credibility-and-relationships) |
+| Reader experience and scene function | What is worth experiencing here, and does it repeat earlier work? | [Reader experience](#reader-experience), [pacing](#pacing-and-necessity) |
+| Causality, continuity and payoff | Are consequences and promises supported by the prose? | [Causality](#causality-and-timeline), [world](#world-and-factual-consistency), [knowledge](#knowledge-and-obligation) |
+| POV, prose and restraint | Does the language serve this perspective without explaining it twice? | [POV and prose](#pov-tone-and-prose), [freshness](#ai-tell-and-freshness-pass) |
+
+**Before drafting:** establish immediate wants, distinct voices, the concrete
+situation and intended reader experience. Then write the scene, not answers to
+this table. Use [drafting-workflow.md](drafting-workflow.md) for the cadence.
+
+**After a chapter:** check voice, emotional plausibility, physical clarity and
+conversational development against adjacent prose and relevant earlier scenes.
+Use the families that expose a real issue; fix propagating defects without
+attempting final polish before structure settles.
+
+**After an arc or whole work:** prioritize cumulative reader experience,
+relationship development, repeated scene functions, causality and payoff; then
+check voice/POV and line work where needed. Read the whole agreed scope, not
+just changed passages. A targeted pass discloses what it did not assess.
+
+Add humor, action readability or [genre-specific lenses](genre-adapters.md) when
+the premise or feedback calls for them. Source-dependent cultural or technical
+claims need relevant research, not another invented editor persona. No numeric
+quality score, compulsory finding, universal conflict requirement or requirement
+to rewrite every scene. Quiet pleasure and deliberate ambiguity remain valid.
+
 ## Causality and timeline
 
 - Are effects supported by causes visible or intentionally concealed?
 - Are duration, simultaneity, travel, deadlines, and event order possible?
 - Did an open element disappear without resolution or deliberate abandonment?
 - Does the scene alter meaningful state, or can it be removed unchanged?
-
-For preventive drafting checkpoints, see [drafting-workflow.md](drafting-workflow.md).
-Use [character-voice preparation](influence-and-voice.md#character-voice-preparation-and-maintenance)
-to assess diction, rhythm, listener-dependent register and conversation function,
-not just whether each character has an agenda.
 
 ## Character integrity
 
@@ -34,6 +64,36 @@ not just whether each character has an agenda.
 
 Do not demand consistency so rigidly that people become deterministic. Surprise
 is good; arbitrary convenience is not.
+
+## Emotional credibility and relationships
+
+Assess the person's response to their lived situation, not how neatly they
+express the intended theme. Keep this separate from agency and verbal voice:
+a plausible decision can sound wrong, and recognizable speech can accompany an
+unearned emotional turn.
+
+- Does the reaction follow from what this person experienced, expected and
+  understood? Check the preceding pressure and later behavior, not only a
+  declaration of feeling.
+- Is there room between understanding something intellectually, accepting it
+  emotionally and being able to act on it? These may align immediately; do not
+  require delay, but do not assume insight instantly resolves a difficulty.
+- Are trust, forgiveness, attraction, grief or renewed confidence supported by
+  shared experience and choices? An apology does not automatically restore trust;
+  generosity or agreement does not by itself establish intimacy.
+- Do people react at different speeds or want incompatible outcomes? Preserve
+  warmth without forcing everyone into the same emotional resolution.
+- Does recurring tension develop through new stakes, knowledge, tactics or
+  consequences, rather than reset for another version of the same discussion?
+- Can this exchange end uncertain, awkward, affectionate or unfinished without
+  a summary lesson? Does the next scene respect what remains unsettled?
+
+Ground concerns in specific passages and acknowledge plausible alternative
+readings. Emotional credibility is not clinical diagnosis or a universal model
+of how people must respond. Stoicism, direct feeling, rapid decisions and quiet
+contentment can all be credible; do not add trauma, friction or hesitation as
+mandatory evidence of depth. Use action, compression, a cut or no change when
+those serve better than another explanatory conversation.
 
 ## World and factual consistency
 
