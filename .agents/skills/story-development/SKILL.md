@@ -96,6 +96,13 @@ Complexity can activate a layer earlier than word count. Never manufacture acts
 or scenes merely to fill a template. Completion: the near horizon is actionable
 and the far horizon remains revisable.
 
+Before drafting, load `<SKILL_DIR>/references/drafting-workflow.md` and
+`<SKILL_DIR>/references/influence-and-voice.md`. Use the staged workflow by
+default: provisional destination, early voice calibration, scene drafting with
+chapter checks, then arc and whole-work review. Scale preparation to the brief;
+do not defer character voice until the final polish or require reader approval
+at every chapter.
+
 ### 5. Protect character agency
 
 Before a consequential action, compare it with the character’s goals, knowledge,

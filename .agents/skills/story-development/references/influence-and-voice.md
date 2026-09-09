@@ -32,6 +32,40 @@ Record only useful dimensions:
 Character voice adds assumptions, evasions, favorite concrete domains, status
 behavior, and what the person refuses to say. Avoid catchphrase generators.
 
+## Character-voice preparation and maintenance
+
+Before drafting, give each principal a compact voice entry in existing
+style/character notes: lived background and competence; what they notice;
+vocabulary and sentence rhythm; social tactics and evasions; what changes with
+listener, status and pressure. Depth follows page time; secondary speakers need
+plausible local intentions, not compulsory biographies or colorful quirks.
+
+Separate intelligence, eloquence, emotional insight and self-control. A person
+can read an audience brilliantly but stumble through an apology. Growth changes
+choices and relationships without automatically replacing personality with
+polished self-analysis. Do not assign register from stereotypes about age,
+class, occupation, nationality or intelligence; ground it in this individual.
+For established fictional characters, identify the intended source version and
+story-specific departures; consult relevant source scenes where accessible.
+Label gaps rather than treating a fan summary or vague recollection as canon.
+
+Test voices early using the calibration step in
+[drafting-workflow.md](drafting-workflow.md). In actual prose, compare how the
+same speaker talks publicly, privately and under stress; also compare nearby
+speakers for shared rhythm, vocabulary and habitual ethical explanations.
+Stripping names from selected exchanges can expose interchangeable voices, but
+ordinary assent need not identify a speaker, and a blind attribution score is
+not a literary quality metric. Never replace every short reply with a signature
+phrase. Preserve intentionally formal, poetic, comic and technical registers.
+
+Read whole conversations, not isolated lines. Who wants what from whom? What
+would this person avoid naming? Does the next reply still fit after an edit?
+Keep physical action and silence when they carry meaning; do not bolt gestures
+onto every speech. Distinguish a continuing concern from a repeated conversation
+by tracking its changed stakes, knowledge, tactic or outcome in existing notes.
+A mature cast need not agree, resolve every feeling together, or explain the
+lesson at each exit. Serious speech is not obliged to become funny.
+
 ## Influence cards
 
 An influence card declares:

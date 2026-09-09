@@ -172,6 +172,16 @@ sharing copy for that release.
 See `.agents/skills/story-development/references/story-model.md` and
 `docs/architecture.md` for the complete model.
 
+## Writing workflow
+
+Plan the destination and next arc, calibrate character voices early, then draft
+scenes with chapter-level checks before continuous arc and whole-work review.
+This catches propagating defects without polishing every chapter to final form
+before the structure settles. See the portable
+[drafting workflow](.agents/skills/story-development/references/drafting-workflow.md).
+It is a flexible default, not a guarantee of literary quality or a mandatory
+chapter-by-chapter approval loop.
+
 ## Validation
 
 ```text

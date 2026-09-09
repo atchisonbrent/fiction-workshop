@@ -12,6 +12,11 @@ see [independent-editorial-review.md](independent-editorial-review.md).
 - Did an open element disappear without resolution or deliberate abandonment?
 - Does the scene alter meaningful state, or can it be removed unchanged?
 
+For preventive drafting checkpoints, see [drafting-workflow.md](drafting-workflow.md).
+Use [character-voice preparation](influence-and-voice.md#character-voice-preparation-and-maintenance)
+to assess diction, rhythm, listener-dependent register and conversation function,
+not just whether each character has an agenda.
+
 ## Character integrity
 
 - What does the character want here, and what do they know?
