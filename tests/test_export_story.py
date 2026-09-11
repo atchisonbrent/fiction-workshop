@@ -105,6 +105,32 @@ class ExportStoryTests(unittest.TestCase):
         for path, content in before.items():
             self.assertEqual((self.story / path).read_bytes(), content, str(path))
 
+    def test_chapter_boundaries_carry_no_layout_artifacts(self):
+        draft = self.story / 'release-contracts/short-v1/approved-draft.md'
+        filler = ' '.join(['Ordinary words carry the chapter.'] * 100)
+        text = (f'# Small Mercy\n\n## Chapter One\n\nFirst. {filler}\n\n---\n\nStill first.\n\n'
+                f'---\n\n## Chapter Two\n\nSecond. {filler}\n\n---\n')
+        draft.write_text(text)
+        manifest = self.story / 'release-contracts/short-v1/manifest.json'
+        data = json.loads(manifest.read_text())
+        import hashlib
+        data['files']['approved-draft.md'] = hashlib.sha256(draft.read_bytes()).hexdigest()
+        manifest.write_text(json.dumps(data, indent=2) + '\n')
+        result = self.run_export()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        with zipfile.ZipFile(self.story / 'exports/reading-v1/story.epub') as book:
+            opf = book.read('EPUB/content.opf').decode()
+            spine = opf[opf.index('<spine'):opf.index('</spine>')]
+            self.assertNotIn('idref="nav"', spine)
+            chapters = sorted(n for n in book.namelist() if '/text/ch' in n)
+            self.assertEqual(len(chapters), 2, chapters)
+            bodies = [book.read(n).decode() for n in chapters]
+        self.assertIn('Chapter One', bodies[0])
+        self.assertIn('Still first', bodies[0])
+        self.assertEqual(bodies[0].count('<hr'), 1)  # the mid-chapter rule survives
+        self.assertNotIn('<hr', bodies[1])
+        self.assertIn('<h1 class="title">Small Mercy', (self.story / 'exports/reading-v1/story.html').read_text())
+
 
 if __name__ == '__main__':
     unittest.main()

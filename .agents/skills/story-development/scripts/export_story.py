@@ -30,6 +30,50 @@ def run(command: list[str], *, data: str | None = None, cwd: Path) -> str:
     return result.stdout
 
 
+def stringify(node) -> str:
+    """Plain text of Pandoc inline nodes, whitespace-normalised."""
+    if isinstance(node, dict):
+        if node.get('t') == 'Str':
+            return node['c']
+        if node.get('t') in {'Space', 'SoftBreak', 'LineBreak'}:
+            return ' '
+        return stringify(node.get('c'))
+    if isinstance(node, list):
+        return ''.join(stringify(child) for child in node)
+    return ''
+
+
+def tidy_chapter_boundaries(blocks: list, title: str) -> list:
+    """Remove layout artifacts that sit exactly on reader chapter boundaries.
+
+    Concatenated chapter sources leave a horizontal rule before every chapter
+    heading and after the last one; a lone top-level heading repeating the
+    edition title becomes a one-line spine document behind the first chapter
+    (and Pandoc's EPUB writer inserts one itself unless the body opens with a
+    level-1 heading). Both are valid EPUB and both give scrolling readers an
+    extra element to re-anchor on at the seam. So: drop the title heading,
+    promote every remaining heading one level so chapters are level 1, and
+    drop rules that abut a chapter heading or end the book. Rules inside a
+    chapter are kept.
+    """
+    if (blocks and blocks[0].get('t') == 'Header' and blocks[0]['c'][0] == 1
+            and ' '.join(stringify(blocks[0]['c'][2]).split()) == ' '.join(title.split())
+            and not any(b.get('t') == 'Header' and b['c'][0] == 1 for b in blocks[1:])):
+        blocks = blocks[1:]
+        blocks = [{**b, 'c': [b['c'][0] - 1, *b['c'][1:]]} if b.get('t') == 'Header' else b
+                  for b in blocks]
+    kept: list = []
+    for index, block in enumerate(blocks):
+        if block.get('t') == 'HorizontalRule':
+            following = blocks[index + 1] if index + 1 < len(blocks) else None
+            at_boundary = following is None or (
+                following.get('t') == 'Header' and following['c'][0] == 1)
+            if at_boundary:
+                continue
+        kept.append(block)
+    return kept
+
+
 def export_story(story: Path, release: str, edition: str, title: str,
                  author: str, language: str, rights: str) -> Path:
     for label, value in (('title', title), ('author', author),
@@ -62,6 +106,7 @@ def export_story(story: Path, release: str, edition: str, title: str,
                 pending.extend(node.values())
             elif isinstance(node, list):
                 pending.extend(node)
+        doc['blocks'] = tidy_chapter_boundaries(doc['blocks'], title)
         # Metadata is explicit edition data, never inherited from prose YAML.
         doc['meta'] = {key: {'t': 'MetaString', 'c': value} for key, value in {
             'title': title, 'author': author, 'lang': language, 'rights': rights,
@@ -69,9 +114,14 @@ def export_story(story: Path, release: str, edition: str, title: str,
             'identifier': 'urn:sha256:' + digest(manuscript + edition.encode()),
         }.items()}
         payload = json.dumps(doc, ensure_ascii=False)
-        for target, name in [('html5', 'story.html'), ('epub3', 'story.epub')]:
-            run(['pandoc', '--sandbox', '-f', 'json', '-t', target,
-                 '--standalone', '--toc', '--split-level=2', '-o', name],
+        # Chapters are level-1 headings, one spine document each. The EPUB keeps
+        # its required nav document for the reader's contents menu but omits it
+        # from the linear spine (Pandoc adds it only with --toc), so nothing sits
+        # between the title page and chapter one.
+        for target, name, toc in [('html5', 'story.html', ['--toc']),
+                                  ('epub3', 'story.epub', [])]:
+            run(['pandoc', '--sandbox', '-f', 'json', '-t', target, '--standalone',
+                 *toc, '--split-level=1', '-o', name],
                 data=payload, cwd=stage)
         check = run(['epubcheck', 'story.epub'], cwd=stage)
         (stage / 'story.md').write_bytes(manuscript)
