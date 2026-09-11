@@ -46,6 +46,19 @@ end. In-chapter rules remain. Inspect the generated package rather than assuming
 these transformations suit every heading hierarchy. Manuscripts without chapters
 still export.
 
+Supported assembly convention: `# Edition title` followed by `## Chapter`
+headings, or chapters already at level one. A sole leading H1 above lower
+headings must match the edition title; otherwise export stops rather than
+guessing whether it is a title or a chapter with subsections. Mixed part/chapter
+hierarchies retain their hierarchy and split at H1 parts, **not** H2 chapters;
+one-chapter-per-document is promised only for the supported chapter convention.
+The matching title heading and boundary-adjacent horizontal rules are removed
+from rendered content, not merely hidden. Do not use those boundary rules for
+meaningful authorial separators; use explicit scene-break paragraphs instead.
+Pandoc 3.11 is the tested converter: even a formatting-only change to its bundled
+heading CSS can stop export until the correction is revalidated. This deliberate
+fail-closed tradeoff prevents recurrence of silently uncorrected editions.
+
 An existing edition is never overwritten. Choose a new edition ID for formatting
 changes; this does not require a new story release if prose stays unchanged.
 Exports are separate from frozen source. Generation/checking finishes in a temp
