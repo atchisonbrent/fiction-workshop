@@ -37,9 +37,14 @@ The exporter supports text-only Markdown with headings and inline formatting.
 It rejects raw markup, images and links instead of silently dropping them or
 fetching resources. YAML prose metadata is ignored in favor of explicit export
 metadata. Pandoc runs in sandbox mode without filters or custom templates.
-Chapter files are not read; frozen prose order is authoritative. EPUB splitting
-uses level-two headings (level-one headings also split), matching chaptered
-workshop manuscripts. Manuscripts without chapters still export.
+Chapter files are not read; frozen prose order is authoritative. The current
+chapter-boundary exporter removes a matching redundant manuscript title heading,
+promotes the remaining headings one level, and splits at level one. It omits the
+navigation document from the linear spine while retaining the reader's contents
+menu, and removes horizontal rules immediately before chapter headings or at the
+end. In-chapter rules remain. Inspect the generated package rather than assuming
+these transformations suit every heading hierarchy. Manuscripts without chapters
+still export.
 
 An existing edition is never overwritten. Choose a new edition ID for formatting
 changes; this does not require a new story release if prose stays unchanged.
@@ -64,6 +69,83 @@ inspect HTML at a narrow width, and open the EPUB in an actual reader. EPUBCheck
 validates format, not content or reader usability. If reader access is blocked,
 state the precise gap. Treat importing into a cloud-synced personal library as a
 separate effect; prefer a temporary/local reader for verification.
+
+## Chapter assembly and continuous-scroll acceptance
+
+**Heading semantics and layout are separate decisions.** Promoting `h2` chapters
+into `h1` changes which stylesheet rules apply. Pandoc 3.11's bundled `h1`
+rule introduces `page-break-before: always`, a `3em` top margin, `2em` font size,
+and `150%` line height. Do not inherit those accidentally merely to obtain one
+chapter per spine document.
+
+For the tested Books continuous-scroll correction, replace that bundled `h1`
+rule in the generated EPUB stylesheet with:
+
+```css
+h1 {
+  margin: 1.5em 0 0 0;
+  font-size: 1.5em;
+  page-break-before: auto;
+  break-before: auto;
+  line-height: 135%;
+}
+```
+
+These restore the earlier chapter-heading dimensions and remove the forced page
+break. This is a tested compatibility recipe, not an EPUB requirement or a claim
+that every reading system rejects forced breaks. A heading-scoped stylesheet can
+be designed separately; the exact tested correction above applied to all `h1`
+elements, including the title page.
+
+**Implementation boundary:** the current `export_story.py` chapter-boundary
+change does not yet apply this CSS correction automatically. Its output is not
+the final tested recipe until the stylesheet is corrected and the package is
+validated again. Do not treat the earlier structural cleanup alone as the fix.
+
+### Reproducible assembly/check sequence
+
+1. Export the newest frozen source under a new edition ID. Never edit the frozen
+   draft or overwrite a previous reading edition to make a formatting change.
+2. Inspect the actual OPF spine: title page then chapters in order, no redundant
+   title-only document. Keep a valid navigation document and chapter anchors;
+   a visible contents page is optional, not a reason to lose the contents menu.
+3. Inspect the generated CSS after heading transformations. Apply the rule above
+   for this compatibility path. Keep prose and unrelated layout unchanged.
+4. If repairing an existing EPUB, work on a new copy, preserve all chapter XHTML
+   bytes, and allowlist changed members: stylesheet, package identifier, NCX
+   identifier, and edition label on the title page. Preserve ZIP structure,
+   especially the first, uncompressed `mimetype` entry. Use a new identifier
+   consistent with the new edition; do not reuse a previously imported identity.
+5. Verify **every** chapter's paragraph sequence/order against the prior edition
+   (or byte equality when XHTML was not regenerated). Count chapters
+   programmatically and resolve every navigation target and fragment. Retain
+   source/output hashes and converter versions in the private edition receipt.
+6. Run EPUBCheck on the final packaged bytes, after any CSS/package changes.
+   Inspect the CSS in a browser as a limited check: the computed heading break
+   must be `auto`, and the correct opening paragraph must be present. Neither
+   this nor EPUBCheck proves native reader scrolling.
+7. Import the exact new edition only when authorized, read back its identity,
+   then test **on the affected reader**: scroll from the final paragraphs of one
+   chapter into the next heading and opening; scroll back; check that no text
+   skips or snaps to a different position. Exercise subsequent chapter boundaries
+   and the contents menu. Record the device/mode and which checks actually ran.
+
+### Evidence boundary
+
+A reader reported that the CSS-corrected edition resolved the skipping in iPhone
+Books continuous scrolling on iOS 27 beta 8. All chapter XHTML and navigation
+were unchanged from the preceding failing edition; only the heading rule and
+edition identity/label changed. This supports the recipe in that environment.
+It does not isolate forced breaks from heading dimensions or import identity,
+prove an Apple-internal root cause, or establish compatibility for all devices.
+The preceding removal of redundant spine documents and chapter-join rules did
+not resolve the reported problem on its own.
+
+When an edition passes EPUBCheck but fails this native test, report it as a
+readability failure. Identical chapter bytes across two editions do not prove
+that the reader alone is at fault: package layout, CSS and reader state remain
+variables. Keep private manuscripts, screenshots, IDs and detailed receipts in
+the private works repository, not in this portable workshop.
 
 ## Developer checks
 
