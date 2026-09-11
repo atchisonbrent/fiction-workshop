@@ -13,6 +13,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import zipfile
 from pathlib import Path
 
 from validate_story import RELEASE_ID_RE, validate_story
@@ -28,6 +29,86 @@ def run(command: list[str], *, data: str | None = None, cwd: Path) -> str:
     if result.returncode:
         raise ValueError(f'{command[0]} failed: {result.stderr or result.stdout}')
     return result.stdout
+
+
+def stringify(node) -> str:
+    """Plain text of Pandoc inline nodes, whitespace-normalised."""
+    if isinstance(node, dict):
+        if node.get('t') in {'Code', 'Math'}:
+            return node['c'][-1]
+        if node.get('t') == 'Str':
+            return node['c']
+        if node.get('t') in {'Space', 'SoftBreak', 'LineBreak'}:
+            return ' '
+        return stringify(node.get('c'))
+    if isinstance(node, list):
+        return ''.join(stringify(child) for child in node)
+    return ''
+
+
+def tidy_chapter_boundaries(blocks: list, title: str) -> list:
+    """Remove layout artifacts that sit exactly on reader chapter boundaries.
+
+    Concatenated chapter sources leave a horizontal rule before every chapter
+    heading and after the last one; a lone top-level heading repeating the
+    edition title becomes a one-line spine document behind the first chapter
+    (and Pandoc's EPUB writer inserts one itself unless the body opens with a
+    level-1 heading). Both are valid EPUB and both give scrolling readers an
+    extra element to re-anchor on at the seam. So: drop the title heading,
+    promote every remaining heading one level so chapters are level 1, and
+    drop rules that abut a chapter heading or end the book. Rules inside a
+    chapter are kept.
+    """
+    leading_title = (blocks and blocks[0].get('t') == 'Header'
+                     and blocks[0]['c'][0] == 1
+                     and ' '.join(stringify(blocks[0]['c'][2]).split()) == ' '.join(title.split()))
+    later_h1 = any(b.get('t') == 'Header' and b['c'][0] == 1 for b in blocks[1:])
+    if leading_title and (not later_h1 or (
+            len(blocks) > 1 and blocks[1].get('t') == 'Header')):
+        blocks = blocks[1:]
+    elif (blocks and blocks[0].get('t') == 'Header' and blocks[0]['c'][0] == 1
+          and not later_h1 and any(b.get('t') == 'Header' for b in blocks[1:])):
+        raise ValueError('ambiguous manuscript title/chapter hierarchy; match edition title to source')
+    if not any(b.get('t') == 'Header' and b['c'][0] == 1 for b in blocks):
+        blocks = [{**b, 'c': [b['c'][0] - 1, *b['c'][1:]]} if b.get('t') == 'Header' else b
+                  for b in blocks]
+    kept: list = []
+    for index, block in enumerate(blocks):
+        if block.get('t') == 'HorizontalRule':
+            following = blocks[index + 1] if index + 1 < len(blocks) else None
+            at_boundary = following is None or (
+                following.get('t') == 'Header' and following['c'][0] == 1)
+            if at_boundary:
+                continue
+        kept.append(block)
+    return kept
+
+
+def correct_epub_headings(path: Path) -> None:
+    """Apply the reader-tested rule, preserving every other package member.
+
+    Fail closed if Pandoc changes its bundled rule; never silently publish an
+    edition without the correction. This runs in staging before EPUBCheck.
+    """
+    old = ('h1 {\n  margin: 3em 0 0 0;\n  font-size: 2em;\n'
+           '  page-break-before: always;\n  line-height: 150%;\n}')
+    new = ('h1 {\n  margin: 1.5em 0 0 0;\n  font-size: 1.5em;\n'
+           '  page-break-before: auto;\n  break-before: auto;\n'
+           '  line-height: 135%;\n}')
+    with zipfile.ZipFile(path) as book:
+        infos = book.infolist()
+        contents = {info.filename: book.read(info) for info in infos}
+    css_files = [name for name in contents if name.endswith('.css')]
+    matches = [name for name in css_files if old.encode() in contents[name]]
+    if len(matches) != 1 or contents[matches[0]].count(old.encode()) != 1:
+        raise ValueError('unsupported Pandoc EPUB heading CSS; review converter output')
+    name = matches[0]
+    contents[name] = contents[name].replace(old.encode(), new.encode())
+    replacement = path.with_suffix('.corrected.epub')
+    with zipfile.ZipFile(replacement, 'w') as book:
+        for info in infos:
+            book.writestr(info, contents[info.filename])
+    replacement.replace(path)
 
 
 def export_story(story: Path, release: str, edition: str, title: str,
@@ -62,6 +143,7 @@ def export_story(story: Path, release: str, edition: str, title: str,
                 pending.extend(node.values())
             elif isinstance(node, list):
                 pending.extend(node)
+        doc['blocks'] = tidy_chapter_boundaries(doc['blocks'], title)
         # Metadata is explicit edition data, never inherited from prose YAML.
         doc['meta'] = {key: {'t': 'MetaString', 'c': value} for key, value in {
             'title': title, 'author': author, 'lang': language, 'rights': rights,
@@ -69,10 +151,16 @@ def export_story(story: Path, release: str, edition: str, title: str,
             'identifier': 'urn:sha256:' + digest(manuscript + edition.encode()),
         }.items()}
         payload = json.dumps(doc, ensure_ascii=False)
-        for target, name in [('html5', 'story.html'), ('epub3', 'story.epub')]:
-            run(['pandoc', '--sandbox', '-f', 'json', '-t', target,
-                 '--standalone', '--toc', '--split-level=2', '-o', name],
+        # Chapters are level-1 headings, one spine document each. The EPUB keeps
+        # its required nav document for the reader's contents menu but omits it
+        # from the linear spine (Pandoc adds it only with --toc), so nothing sits
+        # between the title page and chapter one.
+        for target, name, toc in [('html5', 'story.html', ['--toc']),
+                                  ('epub3', 'story.epub', [])]:
+            run(['pandoc', '--sandbox', '-f', 'json', '-t', target, '--standalone',
+                 *toc, '--split-level=1', '-o', name],
                 data=payload, cwd=stage)
+        correct_epub_headings(stage / 'story.epub')
         check = run(['epubcheck', 'story.epub'], cwd=stage)
         (stage / 'story.md').write_bytes(manuscript)
         (stage / 'epubcheck.txt').write_text(check, encoding='utf-8')
