@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.4.1](https://github.com/atchisonbrent/fiction-workshop/compare/v0.4.0...v0.4.1) (2026-09-11)
+
+
+### Bug Fixes
+
+* apply reader-tested EPUB heading CSS before validation ([87f52d8](https://github.com/atchisonbrent/fiction-workshop/commit/87f52d8f384f96397303a320e6545e1b3e6e5c95))
+* keep reader chapter boundaries free of layout artifacts ([cc3b5a6](https://github.com/atchisonbrent/fiction-workshop/commit/cc3b5a61281f9f79964715ce782fac6fb47e336f))
+* keep reader chapter boundaries free of layout artifacts ([dc6bcd6](https://github.com/atchisonbrent/fiction-workshop/commit/dc6bcd6d74676caf1e3d441a0aef1f9c2f73a9b0))
+
 ## [0.4.0](https://github.com/atchisonbrent/fiction-workshop/compare/v0.3.0...v0.4.0) (2026-09-06)
 
 
