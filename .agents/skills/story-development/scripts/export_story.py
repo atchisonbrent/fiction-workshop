@@ -13,6 +13,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import zipfile
 from pathlib import Path
 
 from validate_story import RELEASE_ID_RE, validate_story
@@ -33,6 +34,8 @@ def run(command: list[str], *, data: str | None = None, cwd: Path) -> str:
 def stringify(node) -> str:
     """Plain text of Pandoc inline nodes, whitespace-normalised."""
     if isinstance(node, dict):
+        if node.get('t') in {'Code', 'Math'}:
+            return node['c'][-1]
         if node.get('t') == 'Str':
             return node['c']
         if node.get('t') in {'Space', 'SoftBreak', 'LineBreak'}:
@@ -56,10 +59,17 @@ def tidy_chapter_boundaries(blocks: list, title: str) -> list:
     drop rules that abut a chapter heading or end the book. Rules inside a
     chapter are kept.
     """
-    if (blocks and blocks[0].get('t') == 'Header' and blocks[0]['c'][0] == 1
-            and ' '.join(stringify(blocks[0]['c'][2]).split()) == ' '.join(title.split())
-            and not any(b.get('t') == 'Header' and b['c'][0] == 1 for b in blocks[1:])):
+    leading_title = (blocks and blocks[0].get('t') == 'Header'
+                     and blocks[0]['c'][0] == 1
+                     and ' '.join(stringify(blocks[0]['c'][2]).split()) == ' '.join(title.split()))
+    later_h1 = any(b.get('t') == 'Header' and b['c'][0] == 1 for b in blocks[1:])
+    if leading_title and (not later_h1 or (
+            len(blocks) > 1 and blocks[1].get('t') == 'Header')):
         blocks = blocks[1:]
+    elif (blocks and blocks[0].get('t') == 'Header' and blocks[0]['c'][0] == 1
+          and not later_h1 and any(b.get('t') == 'Header' for b in blocks[1:])):
+        raise ValueError('ambiguous manuscript title/chapter hierarchy; match edition title to source')
+    if not any(b.get('t') == 'Header' and b['c'][0] == 1 for b in blocks):
         blocks = [{**b, 'c': [b['c'][0] - 1, *b['c'][1:]]} if b.get('t') == 'Header' else b
                   for b in blocks]
     kept: list = []
@@ -72,6 +82,33 @@ def tidy_chapter_boundaries(blocks: list, title: str) -> list:
                 continue
         kept.append(block)
     return kept
+
+
+def correct_epub_headings(path: Path) -> None:
+    """Apply the reader-tested rule, preserving every other package member.
+
+    Fail closed if Pandoc changes its bundled rule; never silently publish an
+    edition without the correction. This runs in staging before EPUBCheck.
+    """
+    old = ('h1 {\n  margin: 3em 0 0 0;\n  font-size: 2em;\n'
+           '  page-break-before: always;\n  line-height: 150%;\n}')
+    new = ('h1 {\n  margin: 1.5em 0 0 0;\n  font-size: 1.5em;\n'
+           '  page-break-before: auto;\n  break-before: auto;\n'
+           '  line-height: 135%;\n}')
+    with zipfile.ZipFile(path) as book:
+        infos = book.infolist()
+        contents = {info.filename: book.read(info) for info in infos}
+    css_files = [name for name in contents if name.endswith('.css')]
+    matches = [name for name in css_files if old.encode() in contents[name]]
+    if len(matches) != 1 or contents[matches[0]].count(old.encode()) != 1:
+        raise ValueError('unsupported Pandoc EPUB heading CSS; review converter output')
+    name = matches[0]
+    contents[name] = contents[name].replace(old.encode(), new.encode())
+    replacement = path.with_suffix('.corrected.epub')
+    with zipfile.ZipFile(replacement, 'w') as book:
+        for info in infos:
+            book.writestr(info, contents[info.filename])
+    replacement.replace(path)
 
 
 def export_story(story: Path, release: str, edition: str, title: str,
@@ -123,6 +160,7 @@ def export_story(story: Path, release: str, edition: str, title: str,
             run(['pandoc', '--sandbox', '-f', 'json', '-t', target, '--standalone',
                  *toc, '--split-level=1', '-o', name],
                 data=payload, cwd=stage)
+        correct_epub_headings(stage / 'story.epub')
         check = run(['epubcheck', 'story.epub'], cwd=stage)
         (stage / 'story.md').write_bytes(manuscript)
         (stage / 'epubcheck.txt').write_text(check, encoding='utf-8')

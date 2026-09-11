@@ -97,10 +97,12 @@ that every reading system rejects forced breaks. A heading-scoped stylesheet can
 be designed separately; the exact tested correction above applied to all `h1`
 elements, including the title page.
 
-**Implementation boundary:** the current `export_story.py` chapter-boundary
-change does not yet apply this CSS correction automatically. Its output is not
-the final tested recipe until the stylesheet is corrected and the package is
-validated again. Do not treat the earlier structural cleanup alone as the fix.
+**Implementation:** `export_story.py` applies this correction automatically in
+its temporary staging directory before EPUBCheck and receipt hashing. It preserves
+all non-CSS package members and ZIP entry order/storage. If the converter's
+bundled heading rule changes, export fails explicitly for inspection rather than
+silently omitting the correction. No manual repair step is needed on supported
+converter output.
 
 ### Reproducible assembly/check sequence
 

@@ -125,6 +125,13 @@ class ExportStoryTests(unittest.TestCase):
             chapters = sorted(n for n in book.namelist() if '/text/ch' in n)
             self.assertEqual(len(chapters), 2, chapters)
             bodies = [book.read(n).decode() for n in chapters]
+            css = '\n'.join(book.read(n).decode() for n in book.namelist()
+                            if n.endswith('.css'))
+            self.assertIn('page-break-before: auto;', css)
+            self.assertIn('break-before: auto;', css)
+            self.assertNotIn('page-break-before: always;', css)
+            self.assertEqual(book.infolist()[0].filename, 'mimetype')
+            self.assertEqual(book.infolist()[0].compress_type, zipfile.ZIP_STORED)
         self.assertIn('Chapter One', bodies[0])
         self.assertIn('Still first', bodies[0])
         self.assertEqual(bodies[0].count('<hr'), 1)  # the mid-chapter rule survives
