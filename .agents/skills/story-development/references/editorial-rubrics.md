@@ -242,14 +242,18 @@ on the proposed fix; update state only after selecting the revision.
 
 ## AI-tell and freshness pass
 
-When a prose/freshness pass is appropriate, automatically load `humanizer` if
-available; the user need not invoke it. Use it as an optional diagnostic within
-this lens, not as a whole-manuscript rewriting stage or a second model call.
+When the POV/prose or freshness lens is selected, automatically load `humanizer`
+if available; the user need not invoke it. Apply its suggestions selectively
+within this lens, not as a whole-manuscript rewriting stage or a second model call.
 Without the skill, use the checks in this section. Read project voice, nearby
 prose and relevant motif/context records before judging a pattern.
 
 For each proposed edit, identify the passage and a specific reader-visible
-problem. Project, narrator and character voice override generic pattern rules.
+problem. A freshness finding may use a voice record or relevant pattern as
+Evidence B, or mark it not applicable; do not invent a conflicting passage.
+This lens's review-only and final-prose output rules override the loaded skill's
+output template; they do not depend on a particular installed skill version.
+Project, narrator and character voice override generic pattern rules.
 Preserve deliberate fragments, repetition, ambiguity, motifs, comic timing and
 uninterrupted sincerity. A contrast in dialogue may be the speaker's real point;
 a fragment may carry a beat. Do not impose punctuation bans, a uniform chat voice
