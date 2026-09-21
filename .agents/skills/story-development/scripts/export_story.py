@@ -2,11 +2,13 @@
 """Export a validated, frozen story release to private EPUB and HTML editions.
 
 Requires Pandoc and EPUBCheck on PATH. Does not publish, alter source, or import
-into a reader. This text-only exporter intentionally rejects embedded resources.
+into a reader. Text-only by default; optional local plates use --illustrations.
+Resources embedded in manuscript Markdown remain unsupported.
 """
 from __future__ import annotations
 
 import argparse
+import base64
 import hashlib
 import json
 import shutil
@@ -111,8 +113,86 @@ def correct_epub_headings(path: Path) -> None:
     replacement.replace(path)
 
 
+def local_art_file(path: Path, story: Path) -> Path:
+    """Require a regular story-local file and reject below-root symlink traversal.
+
+    System ancestors (for example macOS /var) and a component resolving exactly
+    to the story root may be aliases; links encountered below it are rejected.
+    Concurrent filesystem edits are not supported.
+    """
+    resolved = path.resolve()
+    if not resolved.is_relative_to(story):
+        raise ValueError('illustration file is outside the story or uses a symlink')
+    absolute = path.absolute()
+    for current in (absolute, *absolute.parents):
+        if current.resolve() == story:
+            break
+        if current.is_symlink():
+            raise ValueError('illustration files must not use symlinks')
+    else:
+        raise ValueError('illustration path does not enter the story root')
+    if not resolved.is_file():
+        raise ValueError('illustration input must be a regular file')
+    return resolved
+
+
+def add_illustrations(doc: dict, manifest: Path, story: Path,
+                      release: str, manuscript: bytes) -> dict:
+    """Insert local PNG/JPEG plates into the AST, never into frozen prose."""
+    manifest = local_art_file(manifest, story)
+    raw = manifest.read_bytes()
+    spec = json.loads(raw)
+    if (not isinstance(spec, dict)
+            or set(spec) != {'schema_version', 'release_id', 'source_sha256', 'images'}
+            or type(spec['schema_version']) is not int or spec['schema_version'] != 1
+            or spec['release_id'] != release
+            or spec['source_sha256'] != digest(manuscript)):
+        raise ValueError('illustration manifest does not match frozen release or schema')
+    if not isinstance(spec['images'], list) or not spec['images']:
+        raise ValueError('illustration manifest requires a nonempty images list')
+    records = []
+    anchors = set()
+    insertions = []
+    for item in spec['images']:
+        if (not isinstance(item, dict) or set(item) != {'after', 'path', 'alt'}
+                or any(not isinstance(value, str) or not value.strip()
+                       for value in item.values())):
+            raise ValueError('each illustration requires only nonempty after, path and alt strings')
+        if item['after'] in anchors:
+            raise ValueError('duplicate illustration anchor')
+        anchors.add(item['after'])
+        matches = [i for i, block in enumerate(doc['blocks'])
+                   if block.get('t') == 'Para' and stringify(block) == item['after']]
+        if len(matches) != 1:
+            raise ValueError('illustration anchor must match exactly one paragraph')
+        name = item['path']
+        if (Path(name).is_absolute() or '..' in Path(name).parts
+                or any(c in name for c in ':\\\x00\r\n')):
+            raise ValueError('illustration path must be local and relative without traversal')
+        image = local_art_file(manifest.parent / name, story)
+        content = image.read_bytes()
+        if image.suffix.lower() == '.png' and content.startswith(b'\x89PNG\r\n\x1a\n'):
+            media_type = 'image/png'
+        elif image.suffix.lower() in {'.jpg', '.jpeg'} and content.startswith(b'\xff\xd8\xff'):
+            media_type = 'image/jpeg'
+        else:
+            raise ValueError('illustrations must be PNG or JPEG files with matching signatures')
+        uri = 'data:' + media_type + ';base64,' + base64.b64encode(content).decode('ascii')
+        plate = {'t': 'Para', 'c': [{'t': 'Image', 'c': [
+            ['', [], []], [{'t': 'Str', 'c': item['alt']}], [uri, '']]}]}
+        insertions.append((matches[0] + 1, plate))
+        records.append({'path': image.relative_to(story).as_posix(),
+                        'sha256': digest(content), 'alt': item['alt'], 'after': item['after']})
+    # All anchors resolve against original prose. Alt text must never create an
+    # anchor, and reverse insertion preserves every original block index.
+    for index, plate in sorted(insertions, key=lambda pair: pair[0], reverse=True):
+        doc['blocks'].insert(index, plate)
+    return {'manifest_sha256': digest(raw), 'images': records}
+
+
 def export_story(story: Path, release: str, edition: str, title: str,
-                 author: str, language: str, rights: str) -> Path:
+                 author: str, language: str, rights: str,
+                 illustrations: Path | None = None) -> Path:
     for label, value in (('title', title), ('author', author),
                          ('language', language), ('rights', rights)):
         if not value.strip():
@@ -144,11 +224,18 @@ def export_story(story: Path, release: str, edition: str, title: str,
             elif isinstance(node, list):
                 pending.extend(node)
         doc['blocks'] = tidy_chapter_boundaries(doc['blocks'], title)
+        art = (add_illustrations(doc, illustrations, story, release, manuscript)
+               if illustrations is not None else None)
+        # Include selected artwork in illustrated-edition identity without changing
+        # the identifier of existing text-only exports.
+        identity = manuscript + edition.encode()
+        if art is not None:
+            identity += json.dumps(art, sort_keys=True).encode()
         # Metadata is explicit edition data, never inherited from prose YAML.
         doc['meta'] = {key: {'t': 'MetaString', 'c': value} for key, value in {
             'title': title, 'author': author, 'lang': language, 'rights': rights,
             'subtitle': f'{release} / {edition}',
-            'identifier': 'urn:sha256:' + digest(manuscript + edition.encode()),
+            'identifier': 'urn:sha256:' + digest(identity),
         }.items()}
         payload = json.dumps(doc, ensure_ascii=False)
         # Chapters are level-1 headings, one spine document each. The EPUB keeps
@@ -173,6 +260,8 @@ def export_story(story: Path, release: str, edition: str, title: str,
             'epubcheck_version': run(['epubcheck', '--version'], cwd=stage).strip(),
             'files': {p.name: digest(p.read_bytes()) for p in sorted(stage.iterdir())},
         }
+        if art is not None:
+            receipt['illustrations'] = art
         (stage / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n',
                                             encoding='utf-8')
         destination = story / 'exports' / edition
@@ -190,12 +279,14 @@ def export_story(story: Path, release: str, edition: str, title: str,
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('story', type=Path)
+    parser.add_argument('--illustrations', type=Path,
+                        help='opt-in local illustration manifest for this edition')
     for name in ('release', 'edition', 'title', 'author', 'language', 'rights'):
         parser.add_argument('--' + name, required=True)
     args = parser.parse_args()
     try:
         output = export_story(args.story, args.release, args.edition, args.title,
-                              args.author, args.language, args.rights)
+                              args.author, args.language, args.rights, args.illustrations)
     except (ValueError, OSError, subprocess.TimeoutExpired) as exc:
         print(f'export failed: {exc}', file=sys.stderr)
         return 1

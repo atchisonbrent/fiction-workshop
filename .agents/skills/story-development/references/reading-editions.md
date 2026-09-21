@@ -67,6 +67,63 @@ Do not run concurrent exporters or edit/swap directories while exporting: this
 local CLI is not a hostile-filesystem or multi-writer service. It makes no
 byte-reproducibility promise across converter versions or timestamps.
 
+## Optional illustrations
+
+Keep generated candidates separate from accepted artwork. Use the passage as
+truth: approve character/style reference sheets, generate a small candidate set,
+then make targeted edits with the selected image attached. References must have
+explicit roles (identity, composition, rendering), not contradictory instructions.
+Check age, anatomy, clothing, cast, setting, spatial logic and continuity against
+approved plates before treating an image as final. A pretty image is not canon.
+Keep prompts, model/route, original files and approval state in the private story.
+
+The default remains text-only. To add plates without rewriting frozen prose,
+create a JSON manifest and PNG/JPEG assets **inside the story directory**:
+
+```json
+{
+  "schema_version": 1,
+  "release_id": "short-v1",
+  "source_sha256": "SHA256_OF_THE_FROZEN_APPROVED_DRAFT",
+  "images": [
+    {
+      "after": "Exact visible text of a unique top-level paragraph.",
+      "path": "images/approved-plate.png",
+      "alt": "A concise description of the scene and its important action."
+    }
+  ]
+}
+```
+
+Add `--illustrations /path/to/private-story/illustrations/edition.json` to the
+normal export command, with a new edition ID. The flag is resolved from the
+invocation directory; each image path is relative to the manifest. Use a SHA-256
+utility against the actual frozen `approved-draft.md`, not working chapters.
+`after` matches the paragraph's normalized AST text (Markdown emphasis markers
+removed), exactly once among top-level prose paragraphs. Prefer plain narration
+without quoted spans or footnotes: this normalizer omits quotation delimiters and
+concatenates note content, rather than reproducing all reader-visible text.
+Duplicate, missing and ambiguous anchors fail, as do blank alt text, unknown
+fields, wrong release/hash, absolute paths, traversal, URLs, colon-containing
+filenames and non-PNG/JPEG signatures. Both the manifest and image files must
+resolve inside the story root. Path components are checked up to the first that
+resolves exactly to that root: that component and its ancestors may be aliases;
+symlinks encountered below it are rejected. This checks file signatures, not full
+raster decoding; EPUBCheck and visual
+inspection remain required. The CLI assumes trusted local input sizes and no
+concurrent filesystem edits. Do not use it as an upload-processing service.
+
+The exporter inserts standalone plates after those paragraphs. Images are
+embedded in EPUB and self-contained HTML; the exact Markdown sharing copy remains
+prose-only. Manuscript raw markup, links and inline images are still rejected,
+even with the flag. The receipt records the manifest hash and image
+paths/hashes/anchors/alt text in manifest order (placement follows prose order);
+artwork also contributes to edition identity. Keep the source manifest and images
+in the story directory and link them from the edition's private record; the
+exporter does not copy these originals into the output directory. Existing
+editions are never overwritten, and no provider integration or billable operation
+is part of exporting. Omit the flag to return to normal text-only operation.
+
 ## Deliver, do not just store
 
 EPUB is the default sustained-reading artifact; HTML is a quick preview and
