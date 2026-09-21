@@ -242,6 +242,27 @@ on the proposed fix; update state only after selecting the revision.
 
 ## AI-tell and freshness pass
 
+When a prose/freshness pass is appropriate, automatically load `humanizer` if
+available; the user need not invoke it. Use it as an optional diagnostic within
+this lens, not as a whole-manuscript rewriting stage or a second model call.
+Without the skill, use the checks in this section. Read project voice, nearby
+prose and relevant motif/context records before judging a pattern.
+
+For each proposed edit, identify the passage and a specific reader-visible
+problem. Project, narrator and character voice override generic pattern rules.
+Preserve deliberate fragments, repetition, ambiguity, motifs, comic timing and
+uninterrupted sincerity. A contrast in dialogue may be the speaker's real point;
+a fragment may carry a beat. Do not impose punctuation bans, a uniform chat voice
+or a quota of changes. Leave functioning passages unchanged.
+
+Do not invent canon or personal history merely to make wording vivid. Keep
+commands, identifiers, quotations being discussed as text and structural markup
+intact. In a review-only task, return suggestions without editing. In an approved
+revision, accept or reject each candidate through the existing workshop process,
+then recheck surrounding continuity and character knowledge. Never edit a frozen
+release. Present only accepted prose or the requested review findings, not the
+Humanizer draft/critique ceremony. No-change is a successful outcome.
+
 Flag clichés, redundant exposition, generic emotional summaries, purple prose,
 forced metaphors, repetitive sentence rhythm, over-explained themes, interchangeable
 dialogue, repeated plot devices, and tidy moral conclusions the story did not earn.
