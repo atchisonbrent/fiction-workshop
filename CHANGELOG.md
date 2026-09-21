@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/atchisonbrent/fiction-workshop/compare/v0.4.1...v0.5.0) (2026-09-21)
+
+
+### Features
+
+* support opt-in local illustration plates in reading editions ([5275f20](https://github.com/atchisonbrent/fiction-workshop/commit/5275f20442c64dbe9cfcc3eb1ac000a6c93eb00c))
+
 ## [0.4.1](https://github.com/atchisonbrent/fiction-workshop/compare/v0.4.0...v0.4.1) (2026-09-11)
 
 
