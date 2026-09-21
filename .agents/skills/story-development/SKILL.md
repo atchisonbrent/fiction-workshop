@@ -195,6 +195,9 @@ For reader delivery, load `<SKILL_DIR>/references/reading-editions.md`. Prefer
 EPUB plus an HTML preview generated from the named frozen release, and verify
 an accessible private download rather than reporting a local path as delivery.
 Keep canonical content in the user's existing story repository when available.
+For illustrated editions, also load
+`<SKILL_DIR>/references/illustrated-editions.md`: source-grounded scene packets,
+identity references, candidate grading, quota checkpoints and accepted-only export.
 
 ### 9. Apply voice and influence deliberately
 

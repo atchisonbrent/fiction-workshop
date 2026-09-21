@@ -69,6 +69,9 @@ byte-reproducibility promise across converter versions or timestamps.
 
 ## Optional illustrations
 
+For scene selection, reference consistency, grading and resumable generation,
+first read `illustrated-editions.md`. This section specifies the export contract.
+
 Keep generated candidates separate from accepted artwork. Use the passage as
 truth: approve character/style reference sheets, generate a small candidate set,
 then make targeted edits with the selected image attached. References must have
